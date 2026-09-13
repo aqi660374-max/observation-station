@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>观测站</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #1B1E1C;
+    color: #E9E6DC;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 28px;
+    border-bottom: 1px solid #2E3230;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .brand-title {
+    font-family: "Noto Serif SC", "Songti SC", serif;
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+  }
+  .brand-sub {
+    font-size: 13px;
+    color: #8B9187;
+    margin-top: 2px;
+  }
+  .sync-info {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: #8B9187;
+  }
+  .refresh-btn {
+    background: transparent;
+    border: 1px solid #3A3F3B;
+    color: #E9E6DC;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-left: 12px;
+  }
+  .refresh-btn:hover { background: #262A27; }
+  .layout { display: flex; flex-wrap: wrap; }
+  .section-label {
+    padding: 16px 28px 8px;
+    font-size: 12px;
+    color: #8B9187;
+  }
+  .topic-block { margin-bottom: 28px; padding: 0 28px; }
+  .topic-title {
+    font-family: "Noto Serif SC", serif;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #7FA66B;
+    margin-right: 4px;
+  }
+  .item-row {
+    border-left: 2px solid #2E3230;
+    padding-left: 16px;
+    margin-top: 10px;
+  }
+  .item {
+    margin-bottom: 14px;
+  }
+  .item-time {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: #8B9187;
+    margin-bottom: 3px;
+  }
+  .item-text { font-size: 14px; line-height: 1.6; }
+  .item-source {
+    font-size: 12px;
+    color: #6E736F;
+    margin-top: 3px;
+  }
+  .static-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+    padding: 0 28px 28px;
+  }
+  .static-card {
+    border: 1px solid #2E3230;
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: #20231F;
+  }
+  .static-card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .static-card-reason { font-size: 12px; color: #8B9187; line-height: 1.5; }
+  .empty-hint { font-size: 13px; color: #6E736F; padding: 0 28px 28px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <p class="brand-title">观测站</p>
+    <p class="brand-sub">个人多领域信号聚合 · 按数据可信度分区</p>
+  </div>
+  <div style="display:flex; align-items:center;">
+    <span class="sync-info" id="sync-info">最后同步 --:--:--</span>
+    <button class="refresh-btn" onclick="loadAll()">刷新</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div style="flex:1; min-width: 320px;">
+    <div class="section-label">有实时数据源</div>
+    <div id="live-feed"></div>
+
+    <div class="section-label" style="border-top: 1px solid #2E3230; margin-top: 8px; padding-top: 20px;">
+      无实时数据源(展示原因,而不是虚假时间戳)
+    </div>
+    <div class="static-grid" id="static-grid"></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "";
+
+async function loadFeed() {
+  const res = await fetch(API_BASE + "/api/feed");
+  const items = await res.json();
+  const byTopic = {};
+  for (const it of items) {
+    if (!byTopic[it.topic]) byTopic[it.topic] = [];
+    byTopic[it.topic].push(it);
+  }
+  const topicLabels = { crypto: "Web3 / 区块链" };
+  const container = document.getElementById("live-feed");
+  container.innerHTML = "";
+  const topicIds = Object.keys(byTopic);
+  if (topicIds.length === 0) {
+    container.innerHTML = '<div class="empty-hint">还没有抓到数据 —— 首次启动请稍等几秒,或检查后端网络连接。</div>';
+    return;
+  }
+  for (const topicId of topicIds) {
+    const block = document.createElement("div");
+    block.className = "topic-block";
+    const label = topicLabels[topicId] || topicId;
+    let rows = "";
+    for (const item of byTopic[topicId].slice(0, 8)) {
+      rows += `
+        <div class="item">
+          <div class="item-time">${item.fetched_at.slice(0, 19).replace("T", " ")} UTC</div>
+          <div class="item-text">${item.summary || item.title}</div>
+          <div class="item-source">来源: ${item.source_name}</div>
+        </div>`;
+    }
+    block.innerHTML = `
+      <div class="topic-title"><span class="live-dot"></span>${label}</div>
+      <div class="item-row">${rows}</div>
+    `;
+    container.appendChild(block);
+  }
+}
+
+async function loadStatic() {
+  const res = await fetch(API_BASE + "/api/static-topics");
+  const topics = await res.json();
+  const grid = document.getElementById("static-grid");
+  grid.innerHTML = "";
+  for (const t of topics) {
+    const card = document.createElement("div");
+    card.className = "static-card";
+    card.innerHTML = `
+      <div class="static-card-title">${t.label}</div>
+      <div class="static-card-reason">${t.reason}</div>
+    `;
+    grid.appendChild(card);
+  }
+}
+
+async function loadStatus() {
+  const res = await fetch(API_BASE + "/api/status");
+  const data = await res.json();
+  const now = new Date();
+  document.getElementById("sync-info").textContent =
+    "最后同步 " + now.toLocaleTimeString("zh-CN", { hour12: false });
+}
+
+async function loadAll() {
+  await Promise.all([loadFeed(), loadStatic(), loadStatus()]);
+}
+
+loadAll();
+setInterval(loadAll, 30000); // 每30秒自动刷新一次页面显示(不等于抓取频率,抓取由后端调度)
+</script>
+
+</body>
+</html>
