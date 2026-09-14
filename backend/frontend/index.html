@@ -15,95 +15,119 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 28px;
+    padding: 18px 24px;
     border-bottom: 1px solid #2E3230;
     flex-wrap: wrap;
     gap: 12px;
+    position: sticky;
+    top: 0;
+    background: #1B1E1C;
+    z-index: 10;
   }
   .brand-title {
     font-family: "Noto Serif SC", "Songti SC", serif;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 500;
     margin: 0;
   }
-  .brand-sub {
-    font-size: 13px;
-    color: #8B9187;
-    margin-top: 2px;
-  }
-  .sync-info {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 12px;
-    color: #8B9187;
-  }
+  .brand-sub { font-size: 12px; color: #8B9187; margin-top: 2px; }
+  .sync-info { font-family: "JetBrains Mono", monospace; font-size: 11px; color: #8B9187; }
   .refresh-btn {
-    background: transparent;
-    border: 1px solid #3A3F3B;
-    color: #E9E6DC;
-    padding: 7px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    margin-left: 12px;
+    background: transparent; border: 1px solid #3A3F3B; color: #E9E6DC;
+    padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-left: 10px;
   }
   .refresh-btn:hover { background: #262A27; }
-  .layout { display: flex; flex-wrap: wrap; }
-  .section-label {
-    padding: 16px 28px 8px;
-    font-size: 12px;
-    color: #8B9187;
+
+  .layout { display: flex; align-items: flex-start; }
+
+  /* ---------- 左侧目录树 ---------- */
+  .sidebar {
+    width: 230px;
+    flex-shrink: 0;
+    border-right: 1px solid #2E3230;
+    padding: 14px 0;
+    position: sticky;
+    top: 61px;
+    max-height: calc(100vh - 61px);
+    overflow-y: auto;
   }
-  .topic-block { margin-bottom: 28px; padding: 0 28px; }
-  .topic-title {
-    font-family: "Noto Serif SC", serif;
-    font-size: 16px;
-    font-weight: 500;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
+  .tree-node-row {
+    display: flex; align-items: center; gap: 4px;
+    padding: 6px 10px; cursor: pointer; font-size: 13px;
+    border-radius: 6px; margin: 1px 8px;
   }
-  .live-dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #7FA66B;
-    margin-right: 4px;
+  .tree-node-row:hover { background: #21251F; }
+  .tree-node-row.selected { background: #262A27; color: #C79A3C; }
+  .tree-toggle {
+    width: 14px; text-align: center; color: #6E736F; font-size: 10px; user-select: none;
   }
-  .item-row {
-    border-left: 2px solid #2E3230;
-    padding-left: 16px;
-    margin-top: 10px;
+  .tree-dot { width: 6px; height: 6px; border-radius: 50%; background: #4C534E; flex-shrink: 0; }
+  .tree-dot.live { background: #7FA66B; }
+  .tree-children { display: none; }
+  .tree-children.open { display: block; }
+
+  /* ---------- 主区域 ---------- */
+  .main {
+    flex: 1;
+    min-width: 320px;
+    padding: 20px 28px 60px;
   }
-  .item {
-    margin-bottom: 14px;
+  .breadcrumb {
+    font-size: 12px; color: #8B9187; margin-bottom: 10px;
+    display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
   }
-  .item-time {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11px;
-    color: #8B9187;
-    margin-bottom: 3px;
+  .breadcrumb span { cursor: pointer; }
+  .breadcrumb span:hover { color: #C79A3C; }
+  .breadcrumb .sep { color: #4C534E; cursor: default; }
+
+  .node-title {
+    font-family: "Noto Serif SC", serif; font-size: 22px; font-weight: 500; margin: 0 0 8px;
   }
-  .item-text { font-size: 14px; line-height: 1.6; }
-  .item-source {
-    font-size: 12px;
-    color: #6E736F;
-    margin-top: 3px;
+  .node-summary {
+    font-size: 15px; line-height: 1.7; color: #E9E6DC; margin-bottom: 14px;
+    border-left: 2px solid #C79A3C; padding-left: 12px;
   }
-  .static-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 10px;
-    padding: 0 28px 28px;
+  .node-detail {
+    font-size: 14px; line-height: 1.85; color: #C7C4BA; margin-bottom: 26px;
+    max-width: 760px; white-space: pre-wrap;
   }
-  .static-card {
-    border: 1px solid #2E3230;
-    border-radius: 8px;
-    padding: 12px 14px;
-    background: #20231F;
+
+  .children-label { font-size: 12px; color: #8B9187; margin-bottom: 10px; }
+  .children-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
   }
-  .static-card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
-  .static-card-reason { font-size: 12px; color: #8B9187; line-height: 1.5; }
-  .empty-hint { font-size: 13px; color: #6E736F; padding: 0 28px 28px; }
+  .child-card {
+    border: 1px solid #2E3230; border-radius: 10px; padding: 14px 16px;
+    background: #20231F; cursor: pointer; transition: border-color .15s;
+  }
+  .child-card:hover { border-color: #C79A3C; }
+  .child-card-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+  .child-card-summary { font-size: 12px; color: #8B9187; line-height: 1.5; }
+
+  /* ---------- 总览 ---------- */
+  .overview-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .overview-card {
+    border: 1px solid #2E3230; border-radius: 10px; padding: 16px 18px;
+    background: #20231F; cursor: pointer; transition: border-color .15s;
+  }
+  .overview-card:hover { border-color: #C79A3C; }
+  .overview-card-title {
+    font-family: "Noto Serif SC", serif; font-size: 15px; font-weight: 500; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .overview-card-summary { font-size: 12.5px; color: #8B9187; line-height: 1.6; }
+
+  /* ---------- 实时数据流(Web3板块专用) ---------- */
+  .live-item { border-left: 2px solid #2E3230; padding-left: 14px; margin-bottom: 12px; }
+  .live-time { font-family: "JetBrains Mono", monospace; font-size: 11px; color: #8B9187; margin-bottom: 2px; }
+  .live-text { font-size: 14px; line-height: 1.6; }
+  .live-source { font-size: 11px; color: #6E736F; margin-top: 2px; }
+
+  .empty-hint { font-size: 13px; color: #6E736F; }
 </style>
 </head>
 <body>
@@ -115,92 +139,277 @@
   </div>
   <div style="display:flex; align-items:center;">
     <span class="sync-info" id="sync-info">最后同步 --:--:--</span>
-    <button class="refresh-btn" onclick="loadAll()">刷新</button>
+    <button class="refresh-btn" onclick="refreshAll()">刷新</button>
   </div>
 </div>
 
 <div class="layout">
-  <div style="flex:1; min-width: 320px;">
-    <div class="section-label">有实时数据源</div>
-    <div id="live-feed"></div>
-
-    <div class="section-label" style="border-top: 1px solid #2E3230; margin-top: 8px; padding-top: 20px;">
-      无实时数据源(展示原因,而不是虚假时间戳)
-    </div>
-    <div class="static-grid" id="static-grid"></div>
-  </div>
+  <div class="sidebar" id="sidebar"></div>
+  <div class="main" id="main"></div>
 </div>
 
 <script>
 const API_BASE = "";
+let TREE = [];
+let selectedPath = []; // 存节点id路径,比如 ["ai_startup", "ai_hardware"]
 
-async function loadFeed() {
-  const res = await fetch(API_BASE + "/api/feed");
-  const items = await res.json();
-  const byTopic = {};
-  for (const it of items) {
-    if (!byTopic[it.topic]) byTopic[it.topic] = [];
-    byTopic[it.topic].push(it);
+// ---------- 数据加载 ----------
+async function loadTree() {
+  const res = await fetch(API_BASE + "/api/tree");
+  TREE = await res.json();
+  renderSidebar();
+  renderMain(); // 默认渲染总览
+}
+
+async function loadStatusTime() {
+  try {
+    await fetch(API_BASE + "/api/status");
+    document.getElementById("sync-info").textContent =
+      "最后同步 " + new Date().toLocaleTimeString("zh-CN", { hour12: false });
+  } catch (e) {}
+}
+
+function refreshAll() {
+  loadTree();
+  loadStatusTime();
+}
+
+// ---------- 工具函数:按路径在树里查节点 ----------
+function findNode(path) {
+  let nodes = TREE;
+  let node = null;
+  for (const id of path) {
+    node = (nodes || []).find((n) => n.id === id);
+    if (!node) return null;
+    nodes = node.children || [];
   }
-  const topicLabels = { crypto: "Web3 / 区块链" };
-  const container = document.getElementById("live-feed");
-  container.innerHTML = "";
-  const topicIds = Object.keys(byTopic);
-  if (topicIds.length === 0) {
-    container.innerHTML = '<div class="empty-hint">还没有抓到数据 —— 首次启动请稍等几秒,或检查后端网络连接。</div>';
+  return node;
+}
+
+function findPathLabels(path) {
+  const labels = [];
+  let nodes = TREE;
+  for (const id of path) {
+    const node = (nodes || []).find((n) => n.id === id);
+    if (!node) break;
+    labels.push({ id, label: node.label });
+    nodes = node.children || [];
+  }
+  return labels;
+}
+
+// ---------- 左侧目录树渲染 ----------
+function renderSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  sidebar.innerHTML = "";
+
+  // "总览" 固定在最上面
+  const overviewRow = document.createElement("div");
+  overviewRow.className = "tree-node-row" + (selectedPath.length === 0 ? " selected" : "");
+  overviewRow.innerHTML = `<span class="tree-toggle"></span><span class="tree-dot"></span><span>总览</span>`;
+  overviewRow.onclick = () => { selectedPath = []; renderSidebar(); renderMain(); };
+  sidebar.appendChild(overviewRow);
+
+  const rootList = document.createElement("div");
+  buildTreeLevel(TREE, rootList, [], 0);
+  sidebar.appendChild(rootList);
+}
+
+function buildTreeLevel(nodes, container, parentPath, depth) {
+  for (const node of nodes) {
+    const path = [...parentPath, node.id];
+    const isSelected = JSON.stringify(path) === JSON.stringify(selectedPath.slice(0, path.length)) &&
+                        selectedPath.length >= path.length && pathsEqual(selectedPath.slice(0, path.length), path);
+    const isExactSelected = pathsEqual(selectedPath, path);
+    const hasChildren = node.children && node.children.length > 0;
+    const isAncestorOfSelected = isPrefixOf(path, selectedPath);
+
+    const row = document.createElement("div");
+    row.className = "tree-node-row" + (isExactSelected ? " selected" : "");
+    row.style.paddingLeft = (10 + depth * 14) + "px";
+    const toggleChar = hasChildren ? (isAncestorOfSelected || isExactSelected ? "▾" : "▸") : "";
+    row.innerHTML = `<span class="tree-toggle">${toggleChar}</span><span class="tree-dot${node.type === "live" ? " live" : ""}"></span><span>${node.label}</span>`;
+    row.onclick = (e) => {
+      e.stopPropagation();
+      selectedPath = path;
+      renderSidebar();
+      renderMain();
+    };
+    container.appendChild(row);
+
+    if (hasChildren) {
+      const childWrap = document.createElement("div");
+      childWrap.className = "tree-children" + (isAncestorOfSelected || isExactSelected ? " open" : "");
+      buildTreeLevel(node.children, childWrap, path, depth + 1);
+      container.appendChild(childWrap);
+    }
+  }
+}
+
+function pathsEqual(a, b) {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+}
+function isPrefixOf(prefix, full) {
+  if (prefix.length >= full.length) return false;
+  return prefix.every((v, i) => v === full[i]);
+}
+
+// ---------- 主区域渲染 ----------
+function renderMain() {
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+
+  if (selectedPath.length === 0) {
+    renderOverview(main);
     return;
   }
-  for (const topicId of topicIds) {
-    const block = document.createElement("div");
-    block.className = "topic-block";
-    const label = topicLabels[topicId] || topicId;
-    let rows = "";
-    for (const item of byTopic[topicId].slice(0, 8)) {
-      rows += `
-        <div class="item">
-          <div class="item-time">${item.fetched_at.slice(0, 19).replace("T", " ")} UTC</div>
-          <div class="item-text">${item.summary || item.title}</div>
-          <div class="item-source">来源: ${item.source_name}</div>
-        </div>`;
+
+  const node = findNode(selectedPath);
+  if (!node) {
+    main.innerHTML = '<div class="empty-hint">没找到这个板块,点左侧目录重新选一个。</div>';
+    return;
+  }
+
+  // 面包屑
+  const crumbLabels = [{ id: null, label: "总览" }, ...findPathLabels(selectedPath)];
+  const crumb = document.createElement("div");
+  crumb.className = "breadcrumb";
+  crumbLabels.forEach((c, i) => {
+    const span = document.createElement("span");
+    span.textContent = c.label;
+    span.onclick = () => {
+      selectedPath = crumbLabels.slice(1, i + 1).map((x) => x.id);
+      renderSidebar();
+      renderMain();
+    };
+    crumb.appendChild(span);
+    if (i < crumbLabels.length - 1) {
+      const sep = document.createElement("span");
+      sep.className = "sep";
+      sep.textContent = " › ";
+      crumb.appendChild(sep);
     }
-    block.innerHTML = `
-      <div class="topic-title"><span class="live-dot"></span>${label}</div>
-      <div class="item-row">${rows}</div>
-    `;
-    container.appendChild(block);
+  });
+  main.appendChild(crumb);
+
+  const title = document.createElement("h2");
+  title.className = "node-title";
+  title.textContent = node.label;
+  main.appendChild(title);
+
+  if (node.summary) {
+    const summary = document.createElement("div");
+    summary.className = "node-summary";
+    summary.textContent = node.summary;
+    main.appendChild(summary);
+  }
+
+  if (node.type === "live") {
+    renderLiveSection(main);
+    return;
+  }
+
+  if (node.detail) {
+    const detail = document.createElement("div");
+    detail.className = "node-detail";
+    detail.textContent = node.detail;
+    main.appendChild(detail);
+  }
+
+  if (node.children && node.children.length > 0) {
+    const label = document.createElement("div");
+    label.className = "children-label";
+    label.textContent = "继续往下看 · " + node.children.length + " 项";
+    main.appendChild(label);
+
+    const grid = document.createElement("div");
+    grid.className = "children-grid";
+    node.children.forEach((child) => {
+      const card = document.createElement("div");
+      card.className = "child-card";
+      card.innerHTML = `
+        <div class="child-card-title">${child.label}</div>
+        <div class="child-card-summary">${child.summary || ""}</div>
+      `;
+      card.onclick = () => {
+        selectedPath = [...selectedPath, child.id];
+        renderSidebar();
+        renderMain();
+      };
+      grid.appendChild(card);
+    });
+    main.appendChild(grid);
   }
 }
 
-async function loadStatic() {
-  const res = await fetch(API_BASE + "/api/static-topics");
-  const topics = await res.json();
-  const grid = document.getElementById("static-grid");
-  grid.innerHTML = "";
-  for (const t of topics) {
+// ---------- 总览:每个一级板块抽一句精华,不让任何一块占满页面 ----------
+function renderOverview(main) {
+  const title = document.createElement("h2");
+  title.className = "node-title";
+  title.textContent = "总览";
+  main.appendChild(title);
+
+  const hint = document.createElement("div");
+  hint.className = "node-summary";
+  hint.textContent = "每个板块一句话精华,点进去看完整内容;左侧目录也能直接跳到任意层级。";
+  main.appendChild(hint);
+
+  const grid = document.createElement("div");
+  grid.className = "overview-grid";
+  TREE.forEach((node) => {
     const card = document.createElement("div");
-    card.className = "static-card";
+    card.className = "overview-card";
+    const dot = node.type === "live"
+      ? '<span class="tree-dot live"></span>'
+      : '<span class="tree-dot"></span>';
     card.innerHTML = `
-      <div class="static-card-title">${t.label}</div>
-      <div class="static-card-reason">${t.reason}</div>
+      <div class="overview-card-title">${dot}${node.label}</div>
+      <div class="overview-card-summary">${node.summary || ""}</div>
     `;
+    card.onclick = () => {
+      selectedPath = [node.id];
+      renderSidebar();
+      renderMain();
+    };
     grid.appendChild(card);
+  });
+  main.appendChild(grid);
+}
+
+// ---------- Web3板块的实时数据流(沿用之前的抓取数据) ----------
+async function renderLiveSection(main) {
+  const wrap = document.createElement("div");
+  wrap.innerHTML = '<div class="empty-hint">加载实时数据中…</div>';
+  main.appendChild(wrap);
+
+  const res = await fetch(API_BASE + "/api/feed?topic=crypto&limit=20");
+  const items = await res.json();
+  wrap.innerHTML = "";
+
+  if (items.length === 0) {
+    wrap.innerHTML = '<div class="empty-hint">还没抓到数据,稍等几秒或点右上角刷新。</div>';
+    return;
+  }
+
+  for (const item of items) {
+    const timeRaw = item.published_at || item.fetched_at;
+    let timeDisplay = timeRaw;
+    try {
+      timeDisplay = new Date(timeRaw).toISOString().slice(0, 19).replace("T", " ") + " UTC";
+    } catch (e) {}
+    const div = document.createElement("div");
+    div.className = "live-item";
+    div.innerHTML = `
+      <div class="live-time">${timeDisplay}</div>
+      <div class="live-text">${item.summary || item.title}</div>
+      <div class="live-source">来源: ${item.source_name} · 抓取于 ${item.fetched_at.slice(11, 19)} UTC</div>
+    `;
+    wrap.appendChild(div);
   }
 }
 
-async function loadStatus() {
-  const res = await fetch(API_BASE + "/api/status");
-  const data = await res.json();
-  const now = new Date();
-  document.getElementById("sync-info").textContent =
-    "最后同步 " + now.toLocaleTimeString("zh-CN", { hour12: false });
-}
-
-async function loadAll() {
-  await Promise.all([loadFeed(), loadStatic(), loadStatus()]);
-}
-
-loadAll();
-setInterval(loadAll, 30000); // 每30秒自动刷新一次页面显示(不等于抓取频率,抓取由后端调度)
+refreshAll();
+setInterval(refreshAll, 60000);
 </script>
 
 </body>
