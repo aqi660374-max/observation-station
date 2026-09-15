@@ -12,7 +12,7 @@
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -39,6 +39,7 @@ scheduler = BackgroundScheduler(timezone="UTC")
 @app.on_event("startup")
 def on_startup():
     fetcher.init_db()
+    fetcher.seed_profile_defaults()
     # 先立刻跑一次,不用等第一个调度周期
     fetcher.run_all_fetchers()
     scheduler.add_job(fetcher.fetch_crypto, "interval", minutes=5, id="fetch_crypto")
@@ -77,6 +78,22 @@ def get_status():
         "server_time": datetime.now(timezone.utc).isoformat(),
         "sources": [dict(r) for r in rows],
     }
+
+
+@app.get("/api/profile")
+def get_profile_api():
+    return fetcher.get_profile()
+
+
+@app.post("/api/profile")
+async def save_profile_api(request: Request):
+    body = await request.json()
+    section_id = body.get("id")
+    content = body.get("content", "")
+    if not section_id:
+        return {"ok": False, "error": "missing id"}
+    fetcher.set_profile_section(section_id, content)
+    return {"ok": True}
 
 
 @app.get("/api/tree")
