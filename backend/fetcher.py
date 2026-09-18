@@ -101,6 +101,9 @@ def seed_profile_defaults():
             )
     conn.commit()
     conn.close()
+
+
+def get_profile():
     conn = get_conn()
     rows = conn.execute("SELECT * FROM profile").fetchall()
     conn.close()
