@@ -545,6 +545,37 @@ function renderFigureVisual(container, sections) {
     orbitSpheres.push(sph);
   });
 
+  // ---- 长发:一组带弧度的发丝,从头后方垂到肩背,材质做出丝滑光泽 ----
+  function addHair(headY) {
+    const hairGroup = new THREE.Group();
+    const hairMat = new THREE.MeshPhysicalMaterial({
+      color: 0x6b4a32,
+      emissive: new THREE.Color(0x3a281a),
+      emissiveIntensity: 0.4,
+      roughness: 0.3,
+      metalness: 0.2,
+      clearcoat: 1,
+      clearcoatRoughness: 0.1,
+    });
+    const strandCount = 14;
+    for (let i = 0; i < strandCount; i++) {
+      const spread = (i / (strandCount - 1) - 0.5) * 0.42;
+      const frontBack = -0.16 - Math.abs(spread) * 0.15;
+      const lenVariation = 0.75 + Math.random() * 0.35;
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(spread * 0.5, headY + 0.12, frontBack * 0.6),
+        new THREE.Vector3(spread * 0.8, headY - 0.15, frontBack),
+        new THREE.Vector3(spread * 0.95, headY - 0.45 * lenVariation, frontBack * 1.1 + spread * 0.1),
+        new THREE.Vector3(spread * 1.1, headY - 0.85 * lenVariation, frontBack * 0.9 + spread * 0.2),
+      ]);
+      const tubeGeo = new THREE.TubeGeometry(curve, 16, 0.045, 8, false);
+      const strand = new THREE.Mesh(tubeGeo, hairMat);
+      hairGroup.add(strand);
+    }
+    group.add(hairGroup);
+    hairGroupRef = hairGroup;
+  }
+
   // ---- 人形模型:加载失败会有兜底提示,不会导致页面空白 ----
   function addFallbackFigure() {
     const mat = new THREE.MeshPhysicalMaterial({
@@ -562,6 +593,7 @@ function renderFigureVisual(container, sections) {
     legs.position.y = 0.35;
     body.add(legs);
     group.add(body);
+    addHair(1.55);
     const note = document.createElement("div");
     note.className = "empty-hint";
     note.style.cssText = "position:absolute; bottom:6px; left:8px; font-size:10px;";
@@ -605,35 +637,7 @@ function renderFigureVisual(container, sections) {
             action.play();
           }
 
-          // ---- 长发:一组带弧度的发丝,从头后方垂到肩背,材质做出丝滑光泽 ----
-          const hairGroup = new THREE.Group();
-          const hairMat = new THREE.MeshPhysicalMaterial({
-            color: 0x241a16,
-            roughness: 0.28,
-            metalness: 0.15,
-            clearcoat: 1,
-            clearcoatRoughness: 0.1,
-            sheen: 1.0,
-            sheenColor: new THREE.Color(0x8a6a4a),
-          });
-          const headY = 1.55; // 归一化后模型头部大致高度
-          const strandCount = 14;
-          for (let i = 0; i < strandCount; i++) {
-            const spread = (i / (strandCount - 1) - 0.5) * 0.42; // 左右分布
-            const frontBack = -0.16 - Math.abs(spread) * 0.15;   // 贴着后脑往下
-            const lenVariation = 0.75 + Math.random() * 0.35;    // 长短参差,更自然
-            const curve = new THREE.CatmullRomCurve3([
-              new THREE.Vector3(spread * 0.5, headY + 0.12, frontBack * 0.6),
-              new THREE.Vector3(spread * 0.8, headY - 0.15, frontBack),
-              new THREE.Vector3(spread * 0.95, headY - 0.45 * lenVariation, frontBack * 1.1 + spread * 0.1),
-              new THREE.Vector3(spread * 1.1, headY - 0.85 * lenVariation, frontBack * 0.9 + spread * 0.2),
-            ]);
-            const tubeGeo = new THREE.TubeGeometry(curve, 16, 0.018, 6, false);
-            const strand = new THREE.Mesh(tubeGeo, hairMat);
-            hairGroup.add(strand);
-          }
-          group.add(hairGroup);
-          hairGroupRef = hairGroup;
+          addHair(1.55);
         },
         undefined,
         (err) => {
