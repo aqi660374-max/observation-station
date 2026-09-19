@@ -545,31 +545,21 @@ function renderFigureVisual(container, sections) {
     orbitSpheres.push(sph);
   });
 
-  // ---- 长发:一组带弧度的发丝,从头后方垂到肩背,材质做出丝滑光泽 ----
+  // ---- 长发:先用最基础的直筒圆柱体+不受光照影响的材质,确保一定看得见 ----
   function addHair(headY) {
     const hairGroup = new THREE.Group();
-    const hairMat = new THREE.MeshPhysicalMaterial({
-      color: 0x6b4a32,
-      emissive: new THREE.Color(0x3a281a),
-      emissiveIntensity: 0.4,
-      roughness: 0.3,
-      metalness: 0.2,
-      clearcoat: 1,
-      clearcoatRoughness: 0.1,
-    });
-    const strandCount = 14;
+    const hairMat = new THREE.MeshBasicMaterial({ color: 0xC79A3C });
+    const strandCount = 12;
     for (let i = 0; i < strandCount; i++) {
-      const spread = (i / (strandCount - 1) - 0.5) * 0.42;
-      const frontBack = -0.16 - Math.abs(spread) * 0.15;
-      const lenVariation = 0.75 + Math.random() * 0.35;
-      const curve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(spread * 0.5, headY + 0.12, frontBack * 0.6),
-        new THREE.Vector3(spread * 0.8, headY - 0.15, frontBack),
-        new THREE.Vector3(spread * 0.95, headY - 0.45 * lenVariation, frontBack * 1.1 + spread * 0.1),
-        new THREE.Vector3(spread * 1.1, headY - 0.85 * lenVariation, frontBack * 0.9 + spread * 0.2),
-      ]);
-      const tubeGeo = new THREE.TubeGeometry(curve, 16, 0.045, 8, false);
-      const strand = new THREE.Mesh(tubeGeo, hairMat);
+      const spread = (i / (strandCount - 1) - 0.5) * 0.5;
+      const len = 0.9 + Math.random() * 0.3;
+      const strand = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.02, 0.008, len, 6),
+        hairMat
+      );
+      strand.position.set(spread, headY - len / 2 - 0.05, -0.18 - Math.abs(spread) * 0.1);
+      strand.rotation.z = spread * 0.4;
+      strand.rotation.x = 0.15;
       hairGroup.add(strand);
     }
     group.add(hairGroup);
