@@ -7,64 +7,85 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <style>
   * { box-sizing: border-box; }
+  :root {
+    --bg: #12141C;
+    --panel: #1A1D2A;
+    --panel-raised: #20243380;
+    --ink: #EAE3D2;
+    --ink-dim: #7D8299;
+    --line: #262A3A;
+    --brass: #B8935A;
+    --celestial: #6E93B8;
+    --alert: #A85D52;
+  }
   body {
     margin: 0;
-    background: #1B1E1C;
-    color: #E9E6DC;
+    background: var(--bg);
+    color: var(--ink);
     font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   }
   .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 24px;
-    border-bottom: 1px solid #2E3230;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--line);
     flex-wrap: wrap;
     gap: 12px;
     position: sticky;
     top: 0;
-    background: #1B1E1C;
+    background: var(--bg);
     z-index: 10;
   }
   .brand-title {
     font-family: "Noto Serif SC", "Songti SC", serif;
-    font-size: 22px;
+    font-size: 23px;
     font-weight: 500;
     margin: 0;
+    letter-spacing: 0.04em;
   }
-  .brand-sub { font-size: 12px; color: #8B9187; margin-top: 2px; }
-  .sync-info { font-family: "JetBrains Mono", monospace; font-size: 11px; color: #8B9187; }
+  .brand-sub { font-size: 12px; color: var(--ink-dim); margin-top: 3px; }
+  .sync-info { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--ink-dim); }
   .refresh-btn {
-    background: transparent; border: 1px solid #3A3F3B; color: #E9E6DC;
-    padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-left: 10px;
+    background: transparent; border: 1px solid var(--line); color: var(--ink);
+    padding: 6px 14px; border-radius: 3px; font-size: 12px; cursor: pointer; margin-left: 12px;
   }
-  .refresh-btn:hover { background: #262A27; }
+  .refresh-btn:hover { border-color: var(--brass); color: var(--brass); }
 
   .layout { display: flex; align-items: flex-start; }
 
-  /* ---------- 左侧目录树 ---------- */
+  /* ---------- 左侧目录树:按主题分组 ---------- */
   .sidebar {
-    width: 230px;
+    width: 240px;
     flex-shrink: 0;
-    border-right: 1px solid #2E3230;
-    padding: 14px 0;
+    padding: 20px 0;
     position: sticky;
-    top: 61px;
-    max-height: calc(100vh - 61px);
+    top: 65px;
+    max-height: calc(100vh - 65px);
     overflow-y: auto;
   }
+  .sidebar-cluster { margin-bottom: 6px; }
+  .sidebar-cluster-label {
+    font-size: 11px; color: var(--brass); padding: 0 20px; margin: 18px 0 6px;
+    letter-spacing: 0.06em;
+  }
+  .sidebar-cluster:first-child .sidebar-cluster-label { margin-top: 0; }
+  .sidebar-rule {
+    height: 1px; background: linear-gradient(90deg, var(--line), transparent);
+    margin: 0 20px 8px;
+  }
   .tree-node-row {
-    display: flex; align-items: center; gap: 4px;
+    display: flex; align-items: center; gap: 6px;
     padding: 6px 10px; cursor: pointer; font-size: 13px;
-    border-radius: 6px; margin: 1px 8px;
+    border-radius: 3px; margin: 1px 10px;
   }
-  .tree-node-row:hover { background: #21251F; }
-  .tree-node-row.selected { background: #262A27; color: #C79A3C; }
+  .tree-node-row:hover { background: var(--panel); }
+  .tree-node-row.selected { background: var(--panel); color: var(--brass); }
   .tree-toggle {
-    width: 14px; text-align: center; color: #6E736F; font-size: 10px; user-select: none;
+    width: 12px; text-align: center; color: var(--ink-dim); font-size: 10px; user-select: none;
   }
-  .tree-dot { width: 6px; height: 6px; border-radius: 50%; background: #4C534E; flex-shrink: 0; }
-  .tree-dot.live { background: #7FA66B; }
+  .tree-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-dim); flex-shrink: 0; }
+  .tree-dot.live { background: var(--celestial); box-shadow: 0 0 5px var(--celestial); }
   .tree-children { display: none; }
   .tree-children.open { display: block; }
 
@@ -72,115 +93,128 @@
   .main {
     flex: 1;
     min-width: 320px;
-    padding: 20px 28px 60px;
+    padding: 28px 32px 60px;
+    border-left: 1px solid var(--line);
   }
   .breadcrumb {
-    font-size: 12px; color: #8B9187; margin-bottom: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; color: var(--ink-dim); margin-bottom: 14px;
     display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
   }
   .breadcrumb span { cursor: pointer; }
-  .breadcrumb span:hover { color: #C79A3C; }
-  .breadcrumb .sep { color: #4C534E; cursor: default; }
+  .breadcrumb span:hover { color: var(--brass); }
+  .breadcrumb .sep { color: var(--line); cursor: default; }
 
   .node-title {
-    font-family: "Noto Serif SC", serif; font-size: 22px; font-weight: 500; margin: 0 0 8px;
+    font-family: "Noto Serif SC", serif; font-size: 26px; font-weight: 500; margin: 0 0 12px;
+    letter-spacing: 0.02em;
   }
   .node-summary {
-    font-size: 15px; line-height: 1.7; color: #E9E6DC; margin-bottom: 14px;
-    border-left: 2px solid #C79A3C; padding-left: 12px;
+    font-size: 15px; line-height: 1.75; color: var(--ink); margin-bottom: 18px;
+    border-left: 2px solid var(--brass); padding-left: 14px;
   }
   .node-detail {
-    font-size: 14px; line-height: 1.85; color: #C7C4BA; margin-bottom: 26px;
-    max-width: 760px; white-space: pre-wrap;
+    font-size: 14px; line-height: 1.9; color: var(--ink-dim); margin-bottom: 30px;
+    max-width: 740px; white-space: pre-wrap;
   }
 
-  .children-label { font-size: 12px; color: #8B9187; margin-bottom: 10px; }
+  .children-label {
+    font-size: 11px; color: var(--brass); margin-bottom: 12px; letter-spacing: 0.05em;
+  }
   .children-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 12px;
+    gap: 1px 16px;
   }
   .child-card {
-    border: 1px solid #2E3230; border-radius: 10px; padding: 14px 16px;
-    background: #20231F; cursor: pointer; transition: border-color .15s;
+    border-top: 2px solid var(--line); padding: 14px 2px 14px;
+    cursor: pointer; transition: border-color .15s;
   }
-  .child-card:hover { border-color: #C79A3C; }
+  .child-card:hover { border-top-color: var(--brass); }
   .child-card-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
-  .child-card-summary { font-size: 12px; color: #8B9187; line-height: 1.5; }
+  .child-card-summary { font-size: 12px; color: var(--ink-dim); line-height: 1.55; }
 
-  /* ---------- 总览 ---------- */
+  /* ---------- 总览:分组展示,标题区带一点星图装饰 ---------- */
+  .overview-hero { position: relative; padding-bottom: 4px; margin-bottom: 8px; }
+  .overview-hero svg { position: absolute; top: -10px; right: -10px; opacity: 0.35; pointer-events: none; }
+  .overview-cluster { margin-bottom: 30px; }
+  .overview-cluster-label {
+    font-family: "Noto Serif SC", serif; font-size: 15px; color: var(--ink);
+    margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line);
+  }
   .overview-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 14px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1px 18px;
   }
   .overview-card {
-    border: 1px solid #2E3230; border-radius: 10px; padding: 16px 18px;
-    background: #20231F; cursor: pointer; transition: border-color .15s;
+    border-top: 2px solid var(--brass); padding: 14px 2px 4px;
+    cursor: pointer; transition: transform .15s;
   }
-  .overview-card:hover { border-color: #C79A3C; }
+  .overview-card:hover { transform: translateY(-2px); }
+  .overview-card.is-live { border-top-color: var(--celestial); }
   .overview-card-title {
-    font-family: "Noto Serif SC", serif; font-size: 15px; font-weight: 500; margin-bottom: 6px;
-    display: flex; align-items: center; gap: 6px;
+    font-family: "Noto Serif SC", serif; font-size: 15px; font-weight: 500; margin-bottom: 7px;
+    display: flex; align-items: center; gap: 7px;
   }
-  .overview-card-summary { font-size: 12.5px; color: #8B9187; line-height: 1.6; }
+  .overview-card-summary { font-size: 12.5px; color: var(--ink-dim); line-height: 1.65; }
 
   /* ---------- 实时数据流(Web3板块专用) ---------- */
-  .live-item { border-left: 2px solid #2E3230; padding-left: 14px; margin-bottom: 12px; }
-  .live-time { font-family: "JetBrains Mono", monospace; font-size: 11px; color: #8B9187; margin-bottom: 2px; }
+  .live-item { border-left: 2px solid var(--line); padding-left: 14px; margin-bottom: 12px; }
+  .live-time { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--celestial); margin-bottom: 2px; }
   .live-text { font-size: 14px; line-height: 1.6; }
-  .live-source { font-size: 11px; color: #6E736F; margin-top: 2px; }
+  .live-source { font-size: 11px; color: var(--ink-dim); margin-top: 2px; }
 
-  .empty-hint { font-size: 13px; color: #6E736F; }
+  .empty-hint { font-size: 13px; color: var(--ink-dim); }
 
   /* ---------- 我是谁:自我画像编辑区 ---------- */
-  .profile-section { margin-bottom: 22px; }
-  .profile-label { font-size: 14px; font-weight: 500; color: #C79A3C; margin-bottom: 6px; }
+  .profile-section { margin-bottom: 24px; }
+  .profile-label { font-size: 14px; font-weight: 500; color: var(--brass); margin-bottom: 7px; }
   .profile-textarea {
     width: 100%; min-height: 70px; max-width: 700px;
-    background: #20231F; border: 1px solid #2E3230; border-radius: 8px;
-    color: #E9E6DC; font-size: 14px; line-height: 1.6; padding: 10px 12px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 3px;
+    color: var(--ink); font-size: 14px; line-height: 1.6; padding: 10px 12px;
     font-family: inherit; resize: vertical;
   }
-  .profile-textarea:focus { outline: none; border-color: #C79A3C; }
+  .profile-textarea:focus { outline: none; border-color: var(--brass); }
   .profile-meta {
     display: flex; align-items: center; gap: 10px; margin-top: 6px;
   }
   .profile-save-btn {
-    background: #C79A3C; border: none; color: #1B1E1C; font-weight: 500;
-    padding: 5px 14px; border-radius: 6px; font-size: 12px; cursor: pointer;
+    background: var(--brass); border: none; color: #12141C; font-weight: 500;
+    padding: 5px 14px; border-radius: 3px; font-size: 12px; cursor: pointer;
   }
-  .profile-save-btn:hover { opacity: 0.9; }
+  .profile-save-btn:hover { opacity: 0.88; }
   .profile-save-btn:disabled { opacity: 0.5; cursor: default; }
-  .profile-updated { font-size: 11px; color: #6E736F; font-family: "JetBrains Mono", monospace; }
+  .profile-updated { font-size: 11px; color: var(--ink-dim); font-family: "JetBrains Mono", monospace; }
 
   /* ---------- 总览页的今日焦点横幅 ---------- */
   .focus-banner {
-    border: 1px solid #C79A3C; border-radius: 10px; padding: 14px 18px;
-    margin-bottom: 18px; background: #262218;
+    border-top: 2px solid var(--brass); padding: 14px 2px;
+    margin-bottom: 26px; cursor: pointer;
   }
-  .focus-banner-label { font-size: 11px; color: #C79A3C; margin-bottom: 4px; letter-spacing: 0.05em; }
+  .focus-banner-label { font-size: 11px; color: var(--brass); margin-bottom: 5px; letter-spacing: 0.05em; }
   .focus-banner-text { font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
 
   /* ---------- 立体人形:根据自我画像内容动态生成 ---------- */
   .figure-wrap {
-    display: flex; align-items: center; gap: 24px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 24px; margin-bottom: 26px;
     flex-wrap: wrap;
   }
   .figure-canvas-box {
-    width: 260px; height: 300px; flex-shrink: 0; border-radius: 12px;
-    background: radial-gradient(circle at 50% 35%, #262a24 0%, #1B1E1C 75%);
-    border: 1px solid #2E3230; overflow: hidden;
+    width: 260px; height: 300px; flex-shrink: 0; border-radius: 3px;
+    background: radial-gradient(circle at 50% 35%, #1F2436 0%, #12141C 75%);
+    border: 1px solid var(--line); overflow: hidden;
   }
   .figure-legend { flex: 1; min-width: 220px; }
-  .figure-legend-title { font-size: 12px; color: #8B9187; margin-bottom: 10px; }
+  .figure-legend-title { font-size: 12px; color: var(--ink-dim); margin-bottom: 10px; }
   .figure-legend-item {
     display: flex; align-items: center; gap: 8px; font-size: 12.5px;
-    margin-bottom: 6px; color: #C7C4BA;
+    margin-bottom: 6px; color: var(--ink);
   }
   .figure-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .figure-legend-bar {
-    flex: 1; height: 4px; background: #2E3230; border-radius: 2px; overflow: hidden; max-width: 100px;
+    flex: 1; height: 3px; background: var(--line); overflow: hidden; max-width: 100px;
   }
-  .figure-legend-bar-fill { height: 100%; border-radius: 2px; }
+  .figure-legend-bar-fill { height: 100%; }
 </style>
 </head>
 <body>
@@ -188,7 +222,7 @@
 <div class="topbar">
   <div>
     <p class="brand-title">观测站</p>
-    <p class="brand-sub">个人多领域信号聚合 · 按数据可信度分区</p>
+    <p class="brand-sub">个人多领域信号聚合,按数据可信度分区</p>
   </div>
   <div style="display:flex; align-items:center;">
     <span class="sync-info" id="sync-info">最后同步 --:--:--</span>
@@ -251,6 +285,15 @@ function findPathLabels(path) {
   return labels;
 }
 
+// ---------- 主题分组:一级板块归到5个组里,侧栏和总览页共用同一套分组 ----------
+const CLUSTERS = [
+  { label: "市场与技术", ids: ["web3", "ai_startup", "ai_frontier", "tech_career"] },
+  { label: "内容与信息", ids: ["content_matrix", "china_news"] },
+  { label: "内在功课", ids: ["acim", "human_inner_outer"] },
+  { label: "方向与方法论", ids: ["world_class_methods", "career_blueprint", "immigration_city"] },
+  { label: "命理与待定", ids: ["destiny", "misc"] },
+];
+
 // ---------- 左侧目录树渲染 ----------
 function renderSidebar() {
   const sidebar = document.getElementById("sidebar");
@@ -261,11 +304,30 @@ function renderSidebar() {
   overviewRow.className = "tree-node-row" + (selectedPath.length === 0 ? " selected" : "");
   overviewRow.innerHTML = `<span class="tree-toggle"></span><span class="tree-dot"></span><span>总览</span>`;
   overviewRow.onclick = () => { selectedPath = []; renderSidebar(); renderMain(); };
+  overviewRow.style.margin = "0 10px 16px";
   sidebar.appendChild(overviewRow);
 
-  const rootList = document.createElement("div");
-  buildTreeLevel(TREE, rootList, [], 0);
-  sidebar.appendChild(rootList);
+  CLUSTERS.forEach((cluster) => {
+    const clusterNodes = cluster.ids.map((id) => TREE.find((n) => n.id === id)).filter(Boolean);
+    if (clusterNodes.length === 0) return;
+    const clusterWrap = document.createElement("div");
+    clusterWrap.className = "sidebar-cluster";
+
+    const label = document.createElement("div");
+    label.className = "sidebar-cluster-label";
+    label.textContent = cluster.label;
+    clusterWrap.appendChild(label);
+
+    const rule = document.createElement("div");
+    rule.className = "sidebar-rule";
+    clusterWrap.appendChild(rule);
+
+    const list = document.createElement("div");
+    buildTreeLevel(clusterNodes, list, [], 0);
+    clusterWrap.appendChild(list);
+
+    sidebar.appendChild(clusterWrap);
+  });
 }
 
 function buildTreeLevel(nodes, container, parentPath, depth) {
@@ -400,12 +462,28 @@ function renderMain() {
   }
 }
 
-// ---------- 总览:每个一级板块抽一句精华,不让任何一块占满页面 ----------
+// ---------- 总览:标题带星图装饰,内容按主题分组,不再是一整块九宫格 ----------
 async function renderOverview(main) {
+  const hero = document.createElement("div");
+  hero.className = "overview-hero";
+  hero.innerHTML = `
+    <svg width="180" height="120" viewBox="0 0 180 120">
+      <circle cx="150" cy="20" r="1.6" fill="var(--brass)" />
+      <circle cx="120" cy="45" r="1" fill="var(--celestial)" />
+      <circle cx="165" cy="60" r="1.3" fill="var(--brass)" />
+      <circle cx="100" cy="15" r="1" fill="var(--ink-dim)" />
+      <circle cx="140" cy="85" r="1.2" fill="var(--celestial)" />
+      <line x1="150" y1="20" x2="120" y2="45" stroke="var(--line)" stroke-width="1" />
+      <line x1="120" y1="45" x2="165" y2="60" stroke="var(--line)" stroke-width="1" />
+      <line x1="165" y1="60" x2="140" y2="85" stroke="var(--line)" stroke-width="1" />
+      <line x1="100" y1="15" x2="120" y2="45" stroke="var(--line)" stroke-width="1" />
+    </svg>
+  `;
   const title = document.createElement("h2");
   title.className = "node-title";
   title.textContent = "总览";
-  main.appendChild(title);
+  hero.appendChild(title);
+  main.appendChild(hero);
 
   // 今日焦点横幅(读取自我画像里的"我的焦点"字段)
   try {
@@ -422,7 +500,6 @@ async function renderOverview(main) {
         renderSidebar();
         renderMain();
       };
-      banner.style.cursor = "pointer";
       main.appendChild(banner);
     }
   } catch (e) {}
@@ -432,26 +509,40 @@ async function renderOverview(main) {
   hint.textContent = "每个板块一句话精华,点进去看完整内容;左侧目录也能直接跳到任意层级。";
   main.appendChild(hint);
 
-  const grid = document.createElement("div");
-  grid.className = "overview-grid";
-  TREE.forEach((node) => {
-    const card = document.createElement("div");
-    card.className = "overview-card";
-    const dot = node.type === "live"
-      ? '<span class="tree-dot live"></span>'
-      : '<span class="tree-dot"></span>';
-    card.innerHTML = `
-      <div class="overview-card-title">${dot}${node.label}</div>
-      <div class="overview-card-summary">${node.summary || ""}</div>
-    `;
-    card.onclick = () => {
-      selectedPath = [node.id];
-      renderSidebar();
-      renderMain();
-    };
-    grid.appendChild(card);
+  CLUSTERS.forEach((cluster) => {
+    const clusterNodes = cluster.ids.map((id) => TREE.find((n) => n.id === id)).filter(Boolean);
+    if (clusterNodes.length === 0) return;
+
+    const clusterWrap = document.createElement("div");
+    clusterWrap.className = "overview-cluster";
+
+    const label = document.createElement("div");
+    label.className = "overview-cluster-label";
+    label.textContent = cluster.label;
+    clusterWrap.appendChild(label);
+
+    const grid = document.createElement("div");
+    grid.className = "overview-grid";
+    clusterNodes.forEach((node) => {
+      const card = document.createElement("div");
+      card.className = "overview-card" + (node.type === "live" ? " is-live" : "");
+      const dot = node.type === "live"
+        ? '<span class="tree-dot live"></span>'
+        : '<span class="tree-dot"></span>';
+      card.innerHTML = `
+        <div class="overview-card-title">${dot}${node.label}</div>
+        <div class="overview-card-summary">${node.summary || ""}</div>
+      `;
+      card.onclick = () => {
+        selectedPath = [node.id];
+        renderSidebar();
+        renderMain();
+      };
+      grid.appendChild(card);
+    });
+    clusterWrap.appendChild(grid);
+    main.appendChild(clusterWrap);
   });
-  main.appendChild(grid);
 }
 
 // ---------- 立体人形:身体各部位对应不同板块,内容越充实光效越亮 ----------
