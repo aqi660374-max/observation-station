@@ -493,8 +493,8 @@ function renderFigureVisual(container, sections) {
   const height = container.clientHeight || 300;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-  camera.position.set(0, 0.3, 7);
+  const camera = new THREE.PerspectiveCamera(32, width / height, 0.1, 100);
+  camera.position.set(0, 0.4, 8.5);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(width, height);
@@ -503,13 +503,16 @@ function renderFigureVisual(container, sections) {
   container.appendChild(renderer.domElement);
   figureRenderer = renderer;
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-  const key1 = new THREE.PointLight(0xffffff, 0.9);
-  key1.position.set(3, 4, 5);
+  scene.add(new THREE.AmbientLight(0xfff4e0, 0.5));
+  const key1 = new THREE.PointLight(0xffffff, 1.1);
+  key1.position.set(3, 5, 6);
   scene.add(key1);
-  const key2 = new THREE.PointLight(0xC79A3C, 0.5);
-  key2.position.set(-3, -1, 3);
+  const key2 = new THREE.PointLight(0xC79A3C, 0.6);
+  key2.position.set(-4, -2, 4);
   scene.add(key2);
+  const rim = new THREE.PointLight(0x8fb8e0, 0.5);
+  rim.position.set(0, 2, -5);
+  scene.add(rim);
 
   const group = new THREE.Group();
   scene.add(group);
@@ -517,78 +520,135 @@ function renderFigureVisual(container, sections) {
   const fullByPart = {};
   FIGURE_PARTS.forEach((p) => { fullByPart[p.part] = fullness(sections, p.keys); });
 
-  function makeMesh(geo, colorHex, intensity) {
-    const mat = new THREE.MeshStandardMaterial({
+  // 瓷器质感材质(BJD娃娃常见的树脂/瓷器光泽)
+  function limbMaterial(colorHex, intensity) {
+    return new THREE.MeshPhysicalMaterial({
       color: colorHex,
       emissive: new THREE.Color(colorHex),
-      emissiveIntensity: 0.25 + intensity * 0.9,
-      metalness: 0.35,
-      roughness: 0.4,
+      emissiveIntensity: 0.15 + intensity * 0.65,
+      roughness: 0.22,
+      metalness: 0.05,
+      clearcoat: 1,
+      clearcoatRoughness: 0.12,
       transparent: true,
-      opacity: 0.55 + intensity * 0.45,
+      opacity: 0.75 + intensity * 0.25,
     });
-    return new THREE.Mesh(geo, mat);
+  }
+  // 关节用统一的象牙色瓷器材质,不随内容变化,模拟真实BJD球形关节
+  const jointMat = new THREE.MeshPhysicalMaterial({
+    color: 0xEDE6D6,
+    roughness: 0.15,
+    metalness: 0.05,
+    clearcoat: 1,
+    clearcoatRoughness: 0.08,
+  });
+
+  function joint(radius, x, y, z) {
+    const m = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 20), jointMat);
+    m.position.set(x, y, z);
+    group.add(m);
+    return m;
+  }
+  function limb(geo, mat, x, y, z, rotZ) {
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set(x, y, z);
+    if (rotZ) m.rotation.z = rotZ;
+    group.add(m);
+    return m;
   }
 
-  // 头(焦点/我是谁)
-  const head = makeMesh(new THREE.SphereGeometry(0.55, 24, 24), FIGURE_PARTS[0].color, fullByPart.head);
-  head.position.y = 2.05;
+  // ---- 头部(焦点/我是谁)+ 颈关节 ----
+  const headMat = limbMaterial(FIGURE_PARTS[0].color, fullByPart.head);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.5, 28, 28), headMat);
+  head.position.y = 2.55;
+  head.scale.set(0.92, 1.08, 0.95); // 略拉长,更接近娃娃脸型比例
   group.add(head);
+  joint(0.16, 0, 2.08, 0); // 颈关节
 
-  // 躯干(纪律)
-  const torso = makeMesh(new THREE.CylinderGeometry(0.5, 0.65, 1.5, 20), FIGURE_PARTS[1].color, fullByPart.torso);
-  torso.position.y = 1.0;
+  // 简单头发:几缕从头顶垂落的锥形,颜色跟随"审美情感"色调
+  const hairColor = FIGURE_PARTS[6].color;
+  const hairMat = new THREE.MeshPhysicalMaterial({
+    color: hairColor, roughness: 0.35, metalness: 0.1, clearcoat: 0.6,
+    transparent: true, opacity: 0.5 + fullByPart.legR * 0.4,
+  });
+  for (let i = 0; i < 5; i++) {
+    const angle = (i / 5) * Math.PI * 2;
+    const strand = new THREE.Mesh(new THREE.ConeGeometry(0.06, 1.1, 8), hairMat);
+    strand.position.set(Math.cos(angle) * 0.32, 2.35 - i * 0.03, Math.sin(angle) * 0.32);
+    strand.rotation.x = Math.PI;
+    strand.rotation.z = Math.cos(angle) * 0.3;
+    group.add(strand);
+  }
+
+  // ---- 躯干(纪律):用Lathe车削出收腰曲线,比圆柱更优雅 ----
+  const torsoMat = limbMaterial(FIGURE_PARTS[1].color, fullByPart.torso);
+  const torsoPts = [
+    new THREE.Vector2(0.42, 1.85), new THREE.Vector2(0.5, 1.6),
+    new THREE.Vector2(0.46, 1.3), new THREE.Vector2(0.3, 1.0),
+    new THREE.Vector2(0.34, 0.78), new THREE.Vector2(0.4, 0.6),
+  ];
+  const torso = new THREE.Mesh(new THREE.LatheGeometry(torsoPts, 24), torsoMat);
   group.add(torso);
 
-  // 腰带环(秩序)
-  const waist = makeMesh(new THREE.TorusGeometry(0.68, 0.08, 12, 32), FIGURE_PARTS[2].color, fullByPart.waist);
-  waist.position.y = 0.3;
+  // 肩关节 + 髋关节
+  joint(0.14, -0.46, 1.78, 0);
+  joint(0.14, 0.46, 1.78, 0);
+  joint(0.16, -0.32, 0.55, 0);
+  joint(0.16, 0.32, 0.55, 0);
+
+  // ---- 腰环(秩序) ----
+  const waistMat = limbMaterial(FIGURE_PARTS[2].color, fullByPart.waist);
+  const waist = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.045, 10, 30), waistMat);
+  waist.position.y = 0.75;
   waist.rotation.x = Math.PI / 2;
   group.add(waist);
 
-  // 双臂(社交边界 / 时间边界)
-  const armL = makeMesh(new THREE.CylinderGeometry(0.16, 0.13, 1.3, 14), FIGURE_PARTS[3].color, fullByPart.armL);
-  armL.position.set(-0.8, 1.15, 0);
-  armL.rotation.z = Math.PI / 10;
-  group.add(armL);
+  // ---- 双臂(社交边界 / 时间边界):上臂+肘关节+前臂 ----
+  const armLMat = limbMaterial(FIGURE_PARTS[3].color, fullByPart.armL);
+  const armRMat = limbMaterial(FIGURE_PARTS[4].color, fullByPart.armR);
+  limb(new THREE.CylinderGeometry(0.1, 0.085, 0.85, 14), armLMat, -0.62, 1.35, 0, Math.PI / 14);
+  joint(0.1, -0.72, 0.93, 0);
+  limb(new THREE.CylinderGeometry(0.08, 0.06, 0.8, 14), armLMat, -0.8, 0.52, 0, Math.PI / 20);
+  joint(0.08, -0.86, 0.14, 0);
 
-  const armR = makeMesh(new THREE.CylinderGeometry(0.16, 0.13, 1.3, 14), FIGURE_PARTS[4].color, fullByPart.armR);
-  armR.position.set(0.8, 1.15, 0);
-  armR.rotation.z = -Math.PI / 10;
-  group.add(armR);
+  limb(new THREE.CylinderGeometry(0.1, 0.085, 0.85, 14), armRMat, 0.62, 1.35, 0, -Math.PI / 14);
+  joint(0.1, 0.72, 0.93, 0);
+  limb(new THREE.CylinderGeometry(0.08, 0.06, 0.8, 14), armRMat, 0.8, 0.52, 0, -Math.PI / 20);
+  joint(0.08, 0.86, 0.14, 0);
 
-  // 双腿(钱权 / 审美情感)
-  const legL = makeMesh(new THREE.CylinderGeometry(0.2, 0.15, 1.5, 14), FIGURE_PARTS[5].color, fullByPart.legL);
-  legL.position.set(-0.3, -1.0, 0);
-  group.add(legL);
+  // ---- 双腿(钱权 / 审美情感):大腿更修长,更接近BJD娃娃的长腿比例 ----
+  const legLMat = limbMaterial(FIGURE_PARTS[5].color, fullByPart.legL);
+  const legRMat = limbMaterial(FIGURE_PARTS[6].color, fullByPart.legR);
+  limb(new THREE.CylinderGeometry(0.15, 0.11, 1.5, 16), legLMat, -0.28, -0.35, 0, 0);
+  joint(0.12, -0.28, -1.1, 0);
+  limb(new THREE.CylinderGeometry(0.1, 0.08, 1.45, 16), legLMat, -0.28, -1.85, 0, 0);
+  joint(0.09, -0.28, -2.6, 0);
 
-  const legR = makeMesh(new THREE.CylinderGeometry(0.2, 0.15, 1.5, 14), FIGURE_PARTS[6].color, fullByPart.legR);
-  legR.position.set(0.3, -1.0, 0);
-  group.add(legR);
+  limb(new THREE.CylinderGeometry(0.15, 0.11, 1.5, 16), legRMat, 0.28, -0.35, 0, 0);
+  joint(0.12, 0.28, -1.1, 0);
+  limb(new THREE.CylinderGeometry(0.1, 0.08, 1.45, 16), legRMat, 0.28, -1.85, 0, 0);
+  joint(0.09, 0.28, -2.6, 0);
 
-  // 外层光环(前进的方向 / 整合)
+  // ---- 外层光环(前进的方向 / 整合) ----
   const auraIntensity = fullness(sections, FIGURE_PARTS[7].keys);
-  const auraGeo = new THREE.TorusGeometry(2.15, 0.02, 8, 60);
   const auraMat = new THREE.MeshBasicMaterial({
-    color: FIGURE_PARTS[7].color,
-    transparent: true,
-    opacity: 0.15 + auraIntensity * 0.5,
+    color: FIGURE_PARTS[7].color, transparent: true, opacity: 0.12 + auraIntensity * 0.45,
   });
-  const aura = new THREE.Mesh(auraGeo, auraMat);
-  aura.rotation.x = Math.PI / 2.4;
+  const aura = new THREE.Mesh(new THREE.TorusGeometry(2.9, 0.015, 8, 64), auraMat);
+  aura.rotation.x = Math.PI / 2.3;
   group.add(aura);
-
   const aura2 = aura.clone();
-  aura2.rotation.x = -Math.PI / 2.4;
+  aura2.rotation.x = -Math.PI / 2.3;
   aura2.rotation.y = Math.PI / 3;
   group.add(aura2);
 
-  group.position.y = -0.1;
+  group.position.y = -0.15;
+  group.scale.set(1.15, 1.15, 1.15);
 
   let t = 0;
   function animate() {
     figureAnimId = requestAnimationFrame(animate);
-    t += 0.006;
+    t += 0.005;
     group.rotation.y = t;
     aura.rotation.z += 0.003;
     aura2.rotation.z -= 0.002;
