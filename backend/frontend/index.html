@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <title>观测站</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -456,6 +457,10 @@ async function renderOverview(main) {
 // ---------- 立体人形:身体各部位对应不同板块,内容越充实光效越亮 ----------
 let figureAnimId = null;
 let figureRenderer = null;
+let figureMixer = null;
+let figureClock = null;
+
+const MODEL_URL = "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/CesiumMan/glTF-Binary/CesiumMan.glb";
 
 const FIGURE_PARTS = [
   { keys: ["focus", "identity"], label: "焦点 / 我是谁", color: 0xC79A3C, part: "head" },
@@ -484,6 +489,7 @@ function renderFigureVisual(container, sections) {
     figureRenderer.domElement.remove();
     figureRenderer = null;
   }
+  figureMixer = null;
   if (typeof THREE === "undefined") {
     container.innerHTML = '<div class="empty-hint" style="padding:20px;">3D引擎加载失败,刷新页面重试</div>';
     return;
@@ -493,8 +499,8 @@ function renderFigureVisual(container, sections) {
   const height = container.clientHeight || 300;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(32, width / height, 0.1, 100);
-  camera.position.set(0, 0.4, 8.5);
+  const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+  camera.position.set(0, 1.1, 3.2);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(width, height);
@@ -503,16 +509,13 @@ function renderFigureVisual(container, sections) {
   container.appendChild(renderer.domElement);
   figureRenderer = renderer;
 
-  scene.add(new THREE.AmbientLight(0xfff4e0, 0.5));
-  const key1 = new THREE.PointLight(0xffffff, 1.1);
-  key1.position.set(3, 5, 6);
+  scene.add(new THREE.AmbientLight(0xfff4e0, 0.7));
+  const key1 = new THREE.PointLight(0xffffff, 1.2);
+  key1.position.set(2, 3, 3);
   scene.add(key1);
-  const key2 = new THREE.PointLight(0xC79A3C, 0.6);
-  key2.position.set(-4, -2, 4);
+  const key2 = new THREE.PointLight(0xC79A3C, 0.5);
+  key2.position.set(-2, -1, 2);
   scene.add(key2);
-  const rim = new THREE.PointLight(0x8fb8e0, 0.5);
-  rim.position.set(0, 2, -5);
-  scene.add(rim);
 
   const group = new THREE.Group();
   scene.add(group);
@@ -520,138 +523,114 @@ function renderFigureVisual(container, sections) {
   const fullByPart = {};
   FIGURE_PARTS.forEach((p) => { fullByPart[p.part] = fullness(sections, p.keys); });
 
-  // 瓷器质感材质(BJD娃娃常见的树脂/瓷器光泽)
-  function limbMaterial(colorHex, intensity) {
-    return new THREE.MeshPhysicalMaterial({
-      color: colorHex,
-      emissive: new THREE.Color(colorHex),
-      emissiveIntensity: 0.15 + intensity * 0.65,
-      roughness: 0.22,
-      metalness: 0.05,
-      clearcoat: 1,
-      clearcoatRoughness: 0.12,
-      transparent: true,
-      opacity: 0.75 + intensity * 0.25,
+  // ---- 环绕的数据光球:每个对应一个自我画像板块,亮度/大小随内容多少变化 ----
+  const orbitGroup = new THREE.Group();
+  group.add(orbitGroup);
+  const orbitSpheres = [];
+  FIGURE_PARTS.forEach((p, i) => {
+    const f = fullByPart[p.part];
+    const mat = new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: 0.35 + f * 0.6 });
+    const size = 0.035 + f * 0.06;
+    const sph = new THREE.Mesh(new THREE.SphereGeometry(size, 14, 14), mat);
+    const angle = (i / FIGURE_PARTS.length) * Math.PI * 2;
+    sph.userData = {
+      angle,
+      radius: 0.85 + (i % 2) * 0.15,
+      heightOffset: 0.4 + ((i % 3) * 0.35),
+      speed: 0.004 + i * 0.0006,
+    };
+    orbitGroup.add(sph);
+    orbitSpheres.push(sph);
+  });
+
+  // ---- 人形模型:加载失败会有兜底提示,不会导致页面空白 ----
+  function addFallbackFigure() {
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: 0xEDE6D6, roughness: 0.25, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.1,
+      transparent: true, opacity: 0.85,
     });
-  }
-  // 关节用统一的象牙色瓷器材质,不随内容变化,模拟真实BJD球形关节
-  const jointMat = new THREE.MeshPhysicalMaterial({
-    color: 0xEDE6D6,
-    roughness: 0.15,
-    metalness: 0.05,
-    clearcoat: 1,
-    clearcoatRoughness: 0.08,
-  });
-
-  function joint(radius, x, y, z) {
-    const m = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 20), jointMat);
-    m.position.set(x, y, z);
-    group.add(m);
-    return m;
-  }
-  function limb(geo, mat, x, y, z, rotZ) {
-    const m = new THREE.Mesh(geo, mat);
-    m.position.set(x, y, z);
-    if (rotZ) m.rotation.z = rotZ;
-    group.add(m);
-    return m;
+    const body = new THREE.Group();
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 20, 20), mat);
+    head.position.y = 1.55;
+    body.add(head);
+    const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.24, 0.75, 16), mat);
+    torso.position.y = 1.0;
+    body.add(torso);
+    const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.9, 16), mat);
+    legs.position.y = 0.35;
+    body.add(legs);
+    group.add(body);
+    const note = document.createElement("div");
+    note.className = "empty-hint";
+    note.style.cssText = "position:absolute; bottom:6px; left:8px; font-size:10px;";
+    note.textContent = "精细模型加载失败,显示简化版本";
+    container.style.position = "relative";
+    container.appendChild(note);
   }
 
-  // ---- 头部(焦点/我是谁)+ 颈关节 ----
-  const headMat = limbMaterial(FIGURE_PARTS[0].color, fullByPart.head);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.5, 28, 28), headMat);
-  head.position.y = 2.55;
-  head.scale.set(0.92, 1.08, 0.95); // 略拉长,更接近娃娃脸型比例
-  group.add(head);
-  joint(0.16, 0, 2.08, 0); // 颈关节
+  try {
+    if (typeof THREE.GLTFLoader === "undefined") {
+      addFallbackFigure();
+    } else {
+      const loader = new THREE.GLTFLoader();
+      loader.load(
+        MODEL_URL,
+        (gltf) => {
+          const model = gltf.scene;
+          model.traverse((node) => {
+            if (node.isMesh) {
+              node.material = new THREE.MeshPhysicalMaterial({
+                color: 0xEDE6D6, roughness: 0.25, metalness: 0.05,
+                clearcoat: 1, clearcoatRoughness: 0.1,
+              });
+            }
+          });
+          // 归一化模型大小和位置,不同模型原始比例不一样,这里按包围盒自动缩放居中
+          const box = new THREE.Box3().setFromObject(model);
+          const size = new THREE.Vector3();
+          box.getSize(size);
+          const maxDim = Math.max(size.x, size.y, size.z) || 1;
+          const scale = 1.7 / maxDim;
+          model.scale.setScalar(scale);
+          const center = new THREE.Vector3();
+          box.getCenter(center);
+          model.position.set(-center.x * scale, -box.min.y * scale, -center.z * scale);
+          group.add(model);
 
-  // 简单头发:几缕从头顶垂落的锥形,颜色跟随"审美情感"色调
-  const hairColor = FIGURE_PARTS[6].color;
-  const hairMat = new THREE.MeshPhysicalMaterial({
-    color: hairColor, roughness: 0.35, metalness: 0.1, clearcoat: 0.6,
-    transparent: true, opacity: 0.5 + fullByPart.legR * 0.4,
-  });
-  for (let i = 0; i < 5; i++) {
-    const angle = (i / 5) * Math.PI * 2;
-    const strand = new THREE.Mesh(new THREE.ConeGeometry(0.06, 1.1, 8), hairMat);
-    strand.position.set(Math.cos(angle) * 0.32, 2.35 - i * 0.03, Math.sin(angle) * 0.32);
-    strand.rotation.x = Math.PI;
-    strand.rotation.z = Math.cos(angle) * 0.3;
-    group.add(strand);
+          if (gltf.animations && gltf.animations.length) {
+            figureMixer = new THREE.AnimationMixer(model);
+            const action = figureMixer.clipAction(gltf.animations[0]);
+            action.play();
+          }
+        },
+        undefined,
+        (err) => {
+          console.error("模型加载失败", err);
+          addFallbackFigure();
+        }
+      );
+    }
+  } catch (e) {
+    console.error("加载人形模型时出错", e);
+    addFallbackFigure();
   }
 
-  // ---- 躯干(纪律):用Lathe车削出收腰曲线,比圆柱更优雅 ----
-  const torsoMat = limbMaterial(FIGURE_PARTS[1].color, fullByPart.torso);
-  const torsoPts = [
-    new THREE.Vector2(0.42, 1.85), new THREE.Vector2(0.5, 1.6),
-    new THREE.Vector2(0.46, 1.3), new THREE.Vector2(0.3, 1.0),
-    new THREE.Vector2(0.34, 0.78), new THREE.Vector2(0.4, 0.6),
-  ];
-  const torso = new THREE.Mesh(new THREE.LatheGeometry(torsoPts, 24), torsoMat);
-  group.add(torso);
+  group.position.y = -1.0;
 
-  // 肩关节 + 髋关节
-  joint(0.14, -0.46, 1.78, 0);
-  joint(0.14, 0.46, 1.78, 0);
-  joint(0.16, -0.32, 0.55, 0);
-  joint(0.16, 0.32, 0.55, 0);
-
-  // ---- 腰环(秩序) ----
-  const waistMat = limbMaterial(FIGURE_PARTS[2].color, fullByPart.waist);
-  const waist = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.045, 10, 30), waistMat);
-  waist.position.y = 0.75;
-  waist.rotation.x = Math.PI / 2;
-  group.add(waist);
-
-  // ---- 双臂(社交边界 / 时间边界):上臂+肘关节+前臂 ----
-  const armLMat = limbMaterial(FIGURE_PARTS[3].color, fullByPart.armL);
-  const armRMat = limbMaterial(FIGURE_PARTS[4].color, fullByPart.armR);
-  limb(new THREE.CylinderGeometry(0.1, 0.085, 0.85, 14), armLMat, -0.62, 1.35, 0, Math.PI / 14);
-  joint(0.1, -0.72, 0.93, 0);
-  limb(new THREE.CylinderGeometry(0.08, 0.06, 0.8, 14), armLMat, -0.8, 0.52, 0, Math.PI / 20);
-  joint(0.08, -0.86, 0.14, 0);
-
-  limb(new THREE.CylinderGeometry(0.1, 0.085, 0.85, 14), armRMat, 0.62, 1.35, 0, -Math.PI / 14);
-  joint(0.1, 0.72, 0.93, 0);
-  limb(new THREE.CylinderGeometry(0.08, 0.06, 0.8, 14), armRMat, 0.8, 0.52, 0, -Math.PI / 20);
-  joint(0.08, 0.86, 0.14, 0);
-
-  // ---- 双腿(钱权 / 审美情感):大腿更修长,更接近BJD娃娃的长腿比例 ----
-  const legLMat = limbMaterial(FIGURE_PARTS[5].color, fullByPart.legL);
-  const legRMat = limbMaterial(FIGURE_PARTS[6].color, fullByPart.legR);
-  limb(new THREE.CylinderGeometry(0.15, 0.11, 1.5, 16), legLMat, -0.28, -0.35, 0, 0);
-  joint(0.12, -0.28, -1.1, 0);
-  limb(new THREE.CylinderGeometry(0.1, 0.08, 1.45, 16), legLMat, -0.28, -1.85, 0, 0);
-  joint(0.09, -0.28, -2.6, 0);
-
-  limb(new THREE.CylinderGeometry(0.15, 0.11, 1.5, 16), legRMat, 0.28, -0.35, 0, 0);
-  joint(0.12, 0.28, -1.1, 0);
-  limb(new THREE.CylinderGeometry(0.1, 0.08, 1.45, 16), legRMat, 0.28, -1.85, 0, 0);
-  joint(0.09, 0.28, -2.6, 0);
-
-  // ---- 外层光环(前进的方向 / 整合) ----
-  const auraIntensity = fullness(sections, FIGURE_PARTS[7].keys);
-  const auraMat = new THREE.MeshBasicMaterial({
-    color: FIGURE_PARTS[7].color, transparent: true, opacity: 0.12 + auraIntensity * 0.45,
-  });
-  const aura = new THREE.Mesh(new THREE.TorusGeometry(2.9, 0.015, 8, 64), auraMat);
-  aura.rotation.x = Math.PI / 2.3;
-  group.add(aura);
-  const aura2 = aura.clone();
-  aura2.rotation.x = -Math.PI / 2.3;
-  aura2.rotation.y = Math.PI / 3;
-  group.add(aura2);
-
-  group.position.y = -0.15;
-  group.scale.set(1.15, 1.15, 1.15);
-
-  let t = 0;
+  figureClock = new THREE.Clock();
   function animate() {
     figureAnimId = requestAnimationFrame(animate);
-    t += 0.005;
-    group.rotation.y = t;
-    aura.rotation.z += 0.003;
-    aura2.rotation.z -= 0.002;
+    const delta = figureClock.getDelta();
+    if (figureMixer) figureMixer.update(delta);
+    group.rotation.y += 0.004;
+    orbitSpheres.forEach((s) => {
+      s.userData.angle += s.userData.speed;
+      s.position.set(
+        Math.cos(s.userData.angle) * s.userData.radius,
+        s.userData.heightOffset,
+        Math.sin(s.userData.angle) * s.userData.radius
+      );
+    });
     renderer.render(scene, camera);
   }
   animate();
