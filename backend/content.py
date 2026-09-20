@@ -26,6 +26,10 @@ CONTENT_TREE = [
         "label": "AI创业",
         "summary": "2026年AI创业的胜负手已经从「模型能力」转向「产品与市场匹配效率」——巨头把持了基础设施,机会集中在应用层、垂直场景和独立开发者的AI原生打法",
         "detail": "阿里、字节、腾讯、百度等巨头几乎垄断了国内AI的流量入口,新入局者很难在通用助手赛道正面竞争。真正留给创业公司的空间,一部分在应用层——把AI Agent和具体场景深度结合,另一部分在AI硬件的新形态。同时,独立开发者(solo founder)生态呈现出前所未有的活力,但工具本身不会替代产品判断力,能力强的人被AI进一步放大优势,平庸的团队并没有因为用了AI工具就自动变强。",
+        "resources": [
+            {"type": "website", "title": "Indie Hackers(独立开发者社区)", "url": "https://www.indiehackers.com/"},
+            {"type": "website", "title": "Paul Graham 文集(创业方法论原始出处)", "url": "http://paulgraham.com/articles.html"},
+        ],
         "children": [
             {
                 "id": "ai_agent_vertical",
@@ -126,6 +130,10 @@ CONTENT_TREE = [
         "label": "前沿AI发展",
         "summary": "模型能力、Agent框架、开源生态三条线共同定义了当前AI技术的前沿,创业机会是下游产物,这里关注上游本身",
         "detail": "跟「AI创业」板块的区别是:这里不谈怎么赚钱,只关注技术能力本身在往哪个方向走——推理能力、多模态、长上下文、Agent协作协议、开源权重的开放程度,这些是决定「一年后能做什么产品」的底层变量。",
+        "resources": [
+            {"type": "website", "title": "Hugging Face(开源模型与论文聚合)", "url": "https://huggingface.co/"},
+            {"type": "website", "title": "Anthropic 官方文档", "url": "https://docs.anthropic.com/"},
+        ],
         "children": [
             {
                 "id": "model_capability_frontier",
@@ -198,6 +206,10 @@ CONTENT_TREE = [
         "label": "内容与流量矩阵",
         "summary": "小红书、推特/X、闲鱼、自媒体行业不是四个并列信息源,而是同一件事的四个观察角度——别人在卖什么、卖给谁、卖多少钱、市场规则怎么变",
         "detail": "把这四者放在一起,核心逻辑是把它们当成一套完整的竞品/市场对标工具来用:小红书账号矩阵告诉你别人在讲什么故事、打什么人群;推特/X上创始人和产品团队的动态是最快的风向标;闲鱼的挂单价格和成交速度是最诚实的市场需求温度计;自媒体行业的实时新闻告诉你整个内容生态的规则在往哪个方向变。",
+        "resources": [
+            {"type": "website", "title": "新榜(新媒体数据与行业报告)", "url": "https://newrank.cn/"},
+            {"type": "website", "title": "刺猬公社(内容行业垂直媒体,微信公众号搜索关注)", "url": None},
+        ],
         "children": [
             {
                 "id": "xiaohongshu_benchmark",
@@ -290,6 +302,11 @@ CONTENT_TREE = [
         "label": "ACIM 与内在功课",
         "summary": "ACIM把「小我」定义为一切恐惧念头的根源,教学核心是通过宽恕来纠正对现实的错误感知",
         "detail": "ACIM(A Course in Miracles,奇迹课程)是1976年出版的一部灵修自学教材,由心理学家Helen Schucman执笔记录、William Thetford协助整理成书。它借用基督教的词汇体系,讲的却是一套非二元论的形而上学:核心区分「小我(ego)营造的知觉世界」和「真实世界」。教材认为几乎所有的痛苦都源于「我与万物是分离的」这个根本性的错误信念,而「奇迹」不是超自然事件,指的是一次感知层面的转变。",
+        "resources": [
+            {"type": "website", "title": "Foundation for Inner Peace(原始出版方,官方在线课文)", "url": "https://acim.org/"},
+            {"type": "website", "title": "Foundation for A Course in Miracles(Ken Wapnick教学诠释)", "url": "https://facim.org/"},
+            {"type": "book", "title": "《奇迹课程》(A Course in Miracles)原著", "url": None},
+        ],
         "children": [
             {
                 "id": "acim_core_concepts",
@@ -458,6 +475,10 @@ CONTENT_TREE = [
         "label": "技术与职业",
         "summary": "互联网大厂、嵌入式、系统工程师职业、编程语言使用趋势——放在一起是因为它们共享同一批就业市场",
         "detail": "这几个方向虽然听起来是不同领域,但实际上是同一批技术人才在不同细分市场之间流动,趋势往往是互相传导的:比如AI岗位的火热会挤压传统后端岗位的招聘预算,嵌入式行业的芯片周期会影响相关工程师的薪资谈判空间。",
+        "resources": [
+            {"type": "website", "title": "Stack Overflow 开发者调查(年度语言/技术趋势)", "url": "https://survey.stackoverflow.co/"},
+            {"type": "website", "title": "levels.fyi(全球科技公司薪资对比)", "url": "https://www.levels.fyi/"},
+        ],
         "children": [
             {
                 "id": "internet_industry",
@@ -557,6 +578,10 @@ CONTENT_TREE = [
         "label": "出入境 · 签证 · 城市",
         "summary": "签证政策决定了「你能去哪」,城市租房分层决定了「去了之后过得起什么样的生活」——这两者放在一起看才是完整的决策依据",
         "detail": "单看签证政策容易忽略「拿到签证之后的真实生活成本」,单看房价又容易忽略「有没有资格长期待在那里」。把这两块放一起,是为了在评估任何一个「要不要去某个城市生活/工作」的决定时,能同时看到准入门槛和真实生活成本这两个维度。",
+        "resources": [
+            {"type": "website", "title": "Nomad List(数字游民城市评分与社区)", "url": "https://nomadlist.com/"},
+            {"type": "website", "title": "Numbeo(全球生活成本数据库)", "url": "https://www.numbeo.com/"},
+        ],
         "children": [
             {
                 "id": "visa_policies",
@@ -619,6 +644,10 @@ CONTENT_TREE = [
         "label": "全球强者方法论",
         "summary": "这些方法论表面上来自不同领域(物理学思维、投资、产品、桥水基金),但共享同一个底层动作——不断往「更基本的东西」上回溯",
         "detail": "第一性原理、能力圈、减法、痛苦+反思,这些框架用词不同,做的其实是同一件事:拒绝停留在表面的类比和经验,持续追问「这件事最基本的构成要素是什么」,然后从那里重新推导结论,而不是照搬别人已有的做法。",
+        "resources": [
+            {"type": "book", "title": "《原则》(Principles)— Ray Dalio,达利欧痛苦+反思方法论的完整原始出处", "url": None},
+            {"type": "website", "title": "《纳瓦尔宝典》线上免费版(The Almanack of Naval Ravikant)", "url": "https://www.navalmanack.com/"},
+        ],
         "children": [
             {
                 "id": "first_principles",

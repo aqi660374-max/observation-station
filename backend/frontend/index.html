@@ -163,6 +163,17 @@
 
   .empty-hint { font-size: 13px; color: var(--ink-dim); }
 
+  /* ---------- 延伸资源:网站/视频/书籍链接 ---------- */
+  .resources-block { margin-bottom: 28px; max-width: 600px; }
+  .resource-item {
+    display: flex; align-items: baseline; gap: 8px; font-size: 13.5px;
+    margin-bottom: 7px; color: var(--ink);
+  }
+  .resource-icon { font-size: 12px; flex-shrink: 0; }
+  .resource-item a { color: var(--celestial); text-decoration: none; }
+  .resource-item a:hover { text-decoration: underline; }
+  .resource-text-only { color: var(--ink-dim); }
+
 </style>
 </head>
 <body>
@@ -379,6 +390,27 @@ function renderMain() {
     detail.className = "node-detail";
     detail.textContent = node.detail;
     main.appendChild(detail);
+  }
+
+  if (node.resources && node.resources.length > 0) {
+    const resWrap = document.createElement("div");
+    resWrap.className = "resources-block";
+    const resLabel = document.createElement("div");
+    resLabel.className = "children-label";
+    resLabel.textContent = "延伸资源";
+    resWrap.appendChild(resLabel);
+    node.resources.forEach((r) => {
+      const item = document.createElement("div");
+      item.className = "resource-item";
+      const icon = r.type === "book" ? "📖" : r.type === "video" ? "▶" : "🔗";
+      if (r.url) {
+        item.innerHTML = `<span class="resource-icon">${icon}</span><a href="${r.url}" target="_blank" rel="noopener">${r.title}</a>`;
+      } else {
+        item.innerHTML = `<span class="resource-icon">${icon}</span><span class="resource-text-only">${r.title}</span>`;
+      }
+      resWrap.appendChild(item);
+    });
+    main.appendChild(resWrap);
   }
 
   if (node.children && node.children.length > 0) {
