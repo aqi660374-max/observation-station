@@ -285,12 +285,14 @@ function findPathLabels(path) {
   return labels;
 }
 
-// ---------- 主题分组:一级板块归到5个组里,侧栏和总览页共用同一套分组 ----------
+// ---------- 主题分组:一级板块归到几个组里,侧栏和总览页共用同一套分组 ----------
 const CLUSTERS = [
-  { label: "市场与技术", ids: ["web3", "ai_startup", "ai_frontier", "tech_career"] },
-  { label: "内容与信息", ids: ["content_matrix", "china_news"] },
+  { label: "新闻资讯", ids: ["china_news", "web3"] },
+  { label: "全球发展", ids: ["ai_frontier", "tech_career"] },
+  { label: "各国差异", ids: ["immigration_city"] },
+  { label: "内容流量与AI创业", ids: ["content_matrix", "ai_startup"] },
   { label: "内在功课", ids: ["acim", "human_inner_outer"] },
-  { label: "方向与方法论", ids: ["world_class_methods", "career_blueprint", "immigration_city"] },
+  { label: "方法论与蓝图", ids: ["world_class_methods", "career_blueprint"] },
   { label: "命理与待定", ids: ["destiny", "misc"] },
 ];
 
@@ -782,6 +784,22 @@ async function renderSelfProfile(main) {
   const res = await fetch(API_BASE + "/api/profile");
   const sections = await res.json();
   wrap.innerHTML = "";
+
+  // 清空全部按钮
+  const clearBar = document.createElement("div");
+  clearBar.style.cssText = "margin-bottom:16px;";
+  const clearBtn = document.createElement("button");
+  clearBtn.textContent = "清空全部内容";
+  clearBtn.style.cssText = "background:transparent; border:1px solid var(--alert); color:var(--alert); padding:6px 14px; border-radius:3px; font-size:12px; cursor:pointer;";
+  clearBtn.onclick = async () => {
+    if (!confirm("确定要清空「我是谁」这一整块的所有内容吗?这个操作不能撤销。")) return;
+    clearBtn.disabled = true;
+    clearBtn.textContent = "清空中…";
+    await fetch(API_BASE + "/api/profile/clear", { method: "POST" });
+    renderMain();
+  };
+  clearBar.appendChild(clearBtn);
+  wrap.appendChild(clearBar);
 
   // 立体人形展示区
   const figureRow = document.createElement("div");

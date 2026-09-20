@@ -137,6 +137,25 @@ def set_profile_section(section_id, content):
     conn.close()
 
 
+def clear_profile():
+    """清空所有"我是谁"字段的内容(不删表结构,只清空数据)。"""
+    conn = get_conn()
+    now = datetime.now(timezone.utc).isoformat()
+    for sec in PROFILE_SECTIONS:
+        conn.execute(
+            """
+            INSERT INTO profile (section_id, content, updated_at)
+            VALUES (?, '', ?)
+            ON CONFLICT(section_id) DO UPDATE SET
+                content = '',
+                updated_at = excluded.updated_at
+            """,
+            (sec["id"], now),
+        )
+    conn.commit()
+    conn.close()
+
+
 def _mark_source(name, topic, cadence_minutes, error=None):
     conn = get_conn()
     now = datetime.now(timezone.utc).isoformat()

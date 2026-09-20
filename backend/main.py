@@ -96,6 +96,12 @@ async def save_profile_api(request: Request):
     return {"ok": True}
 
 
+@app.post("/api/profile/clear")
+def clear_profile_api():
+    fetcher.clear_profile()
+    return {"ok": True}
+
+
 @app.get("/api/tree")
 def get_tree():
     return CONTENT_TREE
