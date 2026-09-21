@@ -14,7 +14,11 @@ CONTENT_TREE = [
         "label": "Web3 / 区块链",
         "type": "live",
         "summary": "唯一有真正分钟级实时数据的板块——价格快照 + The Block新闻",
-        "detail": "点进去看的是后端定时抓取的真实数据(CoinGecko价格 + The Block RSS),不是这里手写的静态内容。",
+        "detail": "点进去看的是后端定时抓取的真实数据(CoinGecko价格 + OKX欧易价格 + The Block RSS),不是这里手写的静态内容。",
+        "resources": [
+            {"type": "website", "title": "OKX 欧易官网", "url": "https://www.okx.com/"},
+            {"type": "website", "title": "The Block(加密行业权威媒体)", "url": "https://www.theblock.co/"},
+        ],
         "children": [],
     },
 
@@ -73,11 +77,11 @@ CONTENT_TREE = [
                 "summary": "AI原生、第一天就做全球市场、B2B优先、先收钱再迭代、不等完美就发布",
                 "detail": "2026年反复被验证的几条经验,展开如下每一条都值得单独琢磨。",
                 "children": [
-                    {"id": "sf_ai_native", "label": "① 做AI原生的产品", "summary": "不是给老产品加一层AI外壳,是让AI成为产品本身", "detail": "「AI原生」意味着去掉AI能力产品就不成立,而不是AI只是锦上添花的功能点。判断标准很简单:把AI那部分拿掉,这个产品还剩下什么价值?如果答案是「几乎没有」,说明方向是对的。", "children": []},
-                    {"id": "sf_global_first", "label": "② 第一天就做全球市场", "summary": "英文产品、美元定价,不要先做中文再考虑出海", "detail": "国内市场的获客成本和付费习惯,跟海外(尤其是英语市场)差异很大。从第一天就用英文界面、美元计价,能避免后期「翻译+改定价体系」的二次开发成本,也逼着团队一开始就按国际化标准打磨产品。", "children": []},
-                    {"id": "sf_b2b_first", "label": "③ 优先做B2B", "summary": "个人用户不付费,往往是选错了目标人群而不是产品不够好", "detail": "To C产品的获客成本和转化率对小团队极不友好,而B2B客户的付费意愿和客单价通常高得多。很多独立开发者的失败案例,根源不是产品能力不足,而是一开始就选了一个对价格极度敏感的用户群体。", "children": []},
-                    {"id": "sf_revenue_first", "label": "④ 先收钱再完善功能", "summary": "第一笔真实付费,是最好的产品验证方式,比问卷调查可信得多", "detail": "在功能还不完整的时候就设置付费墙,收到第一笔钱意味着有人真的认为这个东西值这个价——这比任何用户访谈或问卷调查都更有说服力,也能帮你尽早判断产品方向是否值得继续投入。", "children": []},
-                    {"id": "sf_ship_fast", "label": "⑤ 不等完美就发布", "summary": "保持极快的迭代节奏,比一次性做到完美更重要", "detail": "在一个已知案例里,创始人早期保持每天推送十几次的迭代频率。核心逻辑是:市场反馈比自己关起门来打磨更能告诉你哪里该改,拖着不发布只是把风险往后推迟,并没有消除风险。", "children": []},
+                    {"id": "sf_ai_native", "label": "① 做AI原生的产品", "summary": "不是给老产品加一层AI外壳,是让AI成为产品本身", "detail": "「AI原生」意味着去掉AI能力产品就不成立,而不是AI只是锦上添花的功能点。判断标准很简单:把AI那部分拿掉,这个产品还剩下什么价值?如果答案是「几乎没有」,说明方向是对的。", "resources": [{"type": "website", "title": "Indie Hackers:真实产品案例与访谈", "url": "https://www.indiehackers.com/"}], "children": []},
+                    {"id": "sf_global_first", "label": "② 第一天就做全球市场", "summary": "英文产品、美元定价,不要先做中文再考虑出海", "detail": "国内市场的获客成本和付费习惯,跟海外(尤其是英语市场)差异很大。从第一天就用英文界面、美元计价,能避免后期「翻译+改定价体系」的二次开发成本,也逼着团队一开始就按国际化标准打磨产品。", "resources": [{"type": "website", "title": "Indie Hackers:真实产品案例与访谈", "url": "https://www.indiehackers.com/"}], "children": []},
+                    {"id": "sf_b2b_first", "label": "③ 优先做B2B", "summary": "个人用户不付费,往往是选错了目标人群而不是产品不够好", "detail": "To C产品的获客成本和转化率对小团队极不友好,而B2B客户的付费意愿和客单价通常高得多。很多独立开发者的失败案例,根源不是产品能力不足,而是一开始就选了一个对价格极度敏感的用户群体。", "resources": [{"type": "website", "title": "Indie Hackers:真实产品案例与访谈", "url": "https://www.indiehackers.com/"}], "children": []},
+                    {"id": "sf_revenue_first", "label": "④ 先收钱再完善功能", "summary": "第一笔真实付费,是最好的产品验证方式,比问卷调查可信得多", "detail": "在功能还不完整的时候就设置付费墙,收到第一笔钱意味着有人真的认为这个东西值这个价——这比任何用户访谈或问卷调查都更有说服力,也能帮你尽早判断产品方向是否值得继续投入。", "resources": [{"type": "website", "title": "Indie Hackers:真实产品案例与访谈", "url": "https://www.indiehackers.com/"}], "children": []},
+                    {"id": "sf_ship_fast", "label": "⑤ 不等完美就发布", "summary": "保持极快的迭代节奏,比一次性做到完美更重要", "detail": "在一个已知案例里,创始人早期保持每天推送十几次的迭代频率。核心逻辑是:市场反馈比自己关起门来打磨更能告诉你哪里该改,拖着不发布只是把风险往后推迟,并没有消除风险。", "resources": [{"type": "website", "title": "Indie Hackers:真实产品案例与访谈", "url": "https://www.indiehackers.com/"}], "children": []},
                 ],
             },
             {
@@ -96,6 +100,9 @@ CONTENT_TREE = [
                 "label": "资本环境与融资节奏",
                 "summary": "巨头在应用层的投入挤压了早期项目的估值空间,融资更看重真实付费数据而非用户量",
                 "detail": "相比前几年「讲故事拿钱」的阶段,2026年的AI创业融资环境更看重可验证的付费转化数据,尤其是B2B方向的项目,投资人会直接要求看MRR(月度经常性收入)增长曲线,而不只是DAU/MAU这类虚荣指标。",
+                "resources": [
+                    {"type": "website", "title": "Crunchbase(融资数据库,可查具体项目融资记录)", "url": "https://www.crunchbase.com/"},
+                ],
                 "children": [],
             },
             {
@@ -103,6 +110,9 @@ CONTENT_TREE = [
                 "label": "常见失败模式",
                 "summary": "「技术很酷但没人为此付费」是最常见的死法,其次是选错目标用户群体",
                 "detail": "复盘大量失败案例后能看到几个反复出现的模式:一是把「技术上能做到」当成「有市场需求」的证明,忽略了付费验证;二是选择了对价格极度敏感的C端用户群体,导致获客成本永远打不平;三是在产品还没验证前就过度追求功能完整度,错过了最佳的市场反馈窗口。",
+                "resources": [
+                    {"type": "website", "title": "CB Insights:创业公司失败原因数据分析", "url": "https://www.cbinsights.com/research/report/startup-failure-reasons-top/"},
+                ],
                 "children": [],
             },
             {
@@ -110,6 +120,9 @@ CONTENT_TREE = [
                 "label": "常见变现模型对比",
                 "summary": "订阅制、按用量计费、一次性买断三种模式各有适用场景,选错了会拖累整个增长曲线",
                 "detail": "订阅制适合使用频率稳定、价值持续产生的工具类产品;按用量计费更贴近成本结构,适合调用大模型API这类边际成本明显的产品;一次性买断适合价值在短时间内就能兑现的场景(比如生成一次性素材包),但天花板明显更低,不适合作为长期主力收入模式。",
+                "resources": [
+                    {"type": "website", "title": "Stripe:SaaS定价模式完整指南", "url": "https://stripe.com/resources/more/saas-pricing-models-101"},
+                ],
                 "children": [],
             },
             {
@@ -117,6 +130,9 @@ CONTENT_TREE = [
                 "label": "值得固定跟踪的信息源",
                 "summary": "与其想着追踪整个AI创业圈,不如精选几个方向性强的账号长期跟踪",
                 "detail": "比如专注出海建站与自然流量打法的博主、专注海外数字身份与支付网关搭建的账号、专注独立开发工具产品体验的开发者,以及关注Agent安全和越权风险的安全研究者——这几类信息源加起来,基本能覆盖你从「做什么」到「怎么落地」再到「怎么避坑」的完整链路。",
+                "resources": [
+                    {"type": "website", "title": "Indie Hackers(独立开发者一手信息源聚集地)", "url": "https://www.indiehackers.com/"},
+                ],
                 "children": [],
             },
         ],
@@ -152,6 +168,10 @@ CONTENT_TREE = [
                 "label": "Agent框架与工具生态",
                 "summary": "工具调用协议的标准化(比如MCP这类协议)正在让不同Agent能更方便地互相调用彼此的工具",
                 "detail": "早期每个Agent平台都有自己一套私有的工具调用方式,导致开发者要为每个平台单独适配。协议标准化之后,一个工具/服务只需要实现一次,就能被多个不同的Agent客户端调用,这大幅降低了生态搭建的门槛,也是当前Agent能力快速外溢的重要基础设施变化。",
+                "resources": [
+                    {"type": "website", "title": "Model Context Protocol 官方站点", "url": "https://modelcontextprotocol.io/"},
+                    {"type": "website", "title": "Anthropic:MCP协议介绍原文", "url": "https://www.anthropic.com/news/model-context-protocol"},
+                ],
                 "children": [],
             },
             {
@@ -159,6 +179,9 @@ CONTENT_TREE = [
                 "label": "开源模型生态",
                 "summary": "开源权重的模型让社区可以自行微调、本地部署,正在形成和闭源大厂模型并行的另一条技术路径",
                 "detail": "开源模型的价值不只是「免费」,更在于可以被社区二次微调成适应特定场景的专用模型、可以本地私有化部署(对数据敏感行业尤其重要)、也让研究者能够真正打开黑箱做可解释性研究。国内团队在开源权重的开放程度和活跃度上已经具备相当的国际影响力。",
+                "resources": [
+                    {"type": "website", "title": "Hugging Face(开源模型托管平台)", "url": "https://huggingface.co/"},
+                ],
                 "children": [],
             },
             {
@@ -174,11 +197,11 @@ CONTENT_TREE = [
                 "summary": "Claude Code偏终端自主重构、Cursor Composer偏IDE内高频编辑、Devin偏完全委托的长任务——三者定位不同,不是谁取代谁",
                 "detail": "2026年几款主流编码Agent已经分化出明确的定位差异,最有效率的开发者通常是组合使用,而不是只选一个。",
                 "children": [
-                    {"id": "prod_claude_code", "label": "Claude Code", "summary": "终端原生的自主Agent,没有行内自动补全,擅长复杂重构和全仓库级别的架构判断", "detail": "Claude Code在终端里运行,交任务给它后由它自主规划、跨文件修改、运行测试、根据报错迭代,过程中会在改动前征求确认。它不做行内自动补全,定位更接近「可以托付复杂重构和代码审查任务的高级工程师」,而不是日常敲代码时的辅助工具。", "children": []},
-                    {"id": "prod_cursor_composer", "label": "Cursor / Composer", "summary": "IDE原生的多模型编辑器,日常高频编辑和跨文件重构的主力工具,可以按任务切换底层模型", "detail": "Cursor的优势是把AI能力深度整合进编辑器本身,Tab自动补全体验成熟,Composer模式支持「先生成修改计划、开发者预览确认、再执行」的跨文件重构流程。它不绑定单一模型,可以按任务需要在Claude、GPT等模型之间切换,团队协作功能(共享规则、代码库索引)也比较完善。", "children": []},
-                    {"id": "prod_devin", "label": "Devin / Devin Desktop", "summary": "定位「完全委托」的自主软件工程师,适合重复性强、定义清晰的迁移类任务,复杂任务偶尔需要人工修正", "detail": "Devin由Cognition开发,核心思路是把整张工单直接委托给一个沙箱化的Agent,由它独立完成后提交Pull Request,人类只在最后review。在处理边界清晰的重复性任务(比如批量迁移)时效率很高,但在复杂任务上响应较慢、偶尔会出现依赖遗漏,需要人工复核。", "children": []},
-                    {"id": "prod_coze_langgraph", "label": "Coze(扣子)与LangGraph", "summary": "两者都是Agent编排工具,但定位不同:Coze偏低代码可视化搭建,LangGraph偏代码级的复杂流程控制", "detail": "Coze这类低代码平台适合快速搭建对话型/工作流型Agent,不需要写太多代码;LangGraph这类框架则是给开发者更精细的流程控制能力(状态管理、条件分支、多Agent协作图),适合需要深度定制的复杂Agent系统,学习门槛也相应更高。", "children": []},
-                    {"id": "prod_x402_xmoney", "label": "x402协议与Agent支付", "summary": "让Agent能像调用API一样自主完成小额链上支付,核心解决的是「微支付手续费不划算」和「无法批量预授权」两个老问题", "detail": "x402把HTTP的402(需要付款)状态码扩展成一套可以被程序读懂的支付流程:Agent请求一个付费资源时收到402响应和支付要求,从预授权的钱包里自动结算后重新发起请求。它由Coinbase推动、已交给Linux基金会托管运营,核心场景是按次购买API调用、数据或模型推理这类高频小额交易,目前仍处在基础设施和生态搭建阶段,还没有成为普及的机器支付标准。X Money则是另一条路径,面向消费者账户内的资金转账和收益功能,跟x402这种面向Agent-to-Agent交易的协议定位不同,不建议混为一谈。", "children": []},
+                    {"id": "prod_claude_code", "label": "Claude Code", "summary": "终端原生的自主Agent,没有行内自动补全,擅长复杂重构和全仓库级别的架构判断", "detail": "Claude Code在终端里运行,交任务给它后由它自主规划、跨文件修改、运行测试、根据报错迭代,过程中会在改动前征求确认。它不做行内自动补全,定位更接近「可以托付复杂重构和代码审查任务的高级工程师」,而不是日常敲代码时的辅助工具。", "resources": [{"type": "website", "title": "Claude Code 官方文档", "url": "https://code.claude.com/docs/en/overview"}], "children": []},
+                    {"id": "prod_cursor_composer", "label": "Cursor / Composer", "summary": "IDE原生的多模型编辑器,日常高频编辑和跨文件重构的主力工具,可以按任务切换底层模型", "detail": "Cursor的优势是把AI能力深度整合进编辑器本身,Tab自动补全体验成熟,Composer模式支持「先生成修改计划、开发者预览确认、再执行」的跨文件重构流程。它不绑定单一模型,可以按任务需要在Claude、GPT等模型之间切换,团队协作功能(共享规则、代码库索引)也比较完善。", "resources": [{"type": "website", "title": "Cursor 官网", "url": "https://cursor.com/"}], "children": []},
+                    {"id": "prod_devin", "label": "Devin / Devin Desktop", "summary": "定位「完全委托」的自主软件工程师,适合重复性强、定义清晰的迁移类任务,复杂任务偶尔需要人工修正", "detail": "Devin由Cognition开发,核心思路是把整张工单直接委托给一个沙箱化的Agent,由它独立完成后提交Pull Request,人类只在最后review。在处理边界清晰的重复性任务(比如批量迁移)时效率很高,但在复杂任务上响应较慢、偶尔会出现依赖遗漏,需要人工复核。", "resources": [{"type": "website", "title": "Cognition(Devin 开发方)官网", "url": "https://cognition.ai/"}], "children": []},
+                    {"id": "prod_coze_langgraph", "label": "Coze(扣子)与LangGraph", "summary": "两者都是Agent编排工具,但定位不同:Coze偏低代码可视化搭建,LangGraph偏代码级的复杂流程控制", "detail": "Coze这类低代码平台适合快速搭建对话型/工作流型Agent,不需要写太多代码;LangGraph这类框架则是给开发者更精细的流程控制能力(状态管理、条件分支、多Agent协作图),适合需要深度定制的复杂Agent系统,学习门槛也相应更高。", "resources": [{"type": "website", "title": "Coze 官网", "url": "https://www.coze.com/"}, {"type": "website", "title": "LangGraph 官方文档", "url": "https://www.langchain.com/langgraph"}], "children": []},
+                    {"id": "prod_x402_xmoney", "label": "x402协议与Agent支付", "summary": "让Agent能像调用API一样自主完成小额链上支付,核心解决的是「微支付手续费不划算」和「无法批量预授权」两个老问题", "detail": "x402把HTTP的402(需要付款)状态码扩展成一套可以被程序读懂的支付流程:Agent请求一个付费资源时收到402响应和支付要求,从预授权的钱包里自动结算后重新发起请求。它由Coinbase推动、已交给Linux基金会托管运营,核心场景是按次购买API调用、数据或模型推理这类高频小额交易,目前仍处在基础设施和生态搭建阶段,还没有成为普及的机器支付标准。X Money则是另一条路径,面向消费者账户内的资金转账和收益功能,跟x402这种面向Agent-to-Agent交易的协议定位不同,不建议混为一谈。", "resources": [{"type": "website", "title": "x402 Foundation 官网", "url": "https://www.x402.org/"}], "children": []},
                 ],
             },
             {
@@ -268,6 +291,9 @@ CONTENT_TREE = [
                 "label": "科技政策",
                 "summary": "工信部、网信办等部门的政策动向,建议直接看官方发布而不是媒体解读",
                 "detail": "涉及AI监管、数据合规、行业标准这类政策,第一手信息应该来自官方发布渠道(比如工信部、网信办官网),媒体的解读文章往往会加入自己的立场,建议先看原文再看解读,避免被二手转述带偏。",
+                "resources": [
+                    {"type": "website", "title": "工业和信息化部官网", "url": "https://www.miit.gov.cn/"},
+                ],
                 "children": [],
             },
             {
@@ -275,6 +301,9 @@ CONTENT_TREE = [
                 "label": "宏观经济",
                 "summary": "GDP、CPI、社融数据这类硬指标建议直接看统计局发布,不要只看财经媒体的标题党解读",
                 "detail": "国家统计局、央行的官方数据发布是最权威的一手信息,财经媒体的解读文章速度快但容易为了流量夸大或简化,建议养成「先看数字本身,再看解读」的习惯。",
+                "resources": [
+                    {"type": "website", "title": "国家统计局官网", "url": "https://www.stats.gov.cn/"},
+                ],
                 "children": [],
             },
             {
@@ -516,10 +545,10 @@ CONTENT_TREE = [
                 "summary": "Python/JavaScript持续主导,Rust/Go在系统与基础设施领域份额稳步上升",
                 "detail": "从近几年各大开发者调查的趋势看,几门主力语言的发展路径分化明显,展开如下。",
                 "children": [
-                    {"id": "lang_python", "label": "Python", "summary": "AI/数据科学生态的绝对主力,生态壁垒短期内难以撼动", "detail": "Python凭借在AI/机器学习、数据科学领域近乎垄断的生态位置(几乎所有主流框架的一手接口都是Python),持续保持增长,即便执行效率不是它的强项,生态和易用性的优势也足以抵消这个短板。", "children": []},
-                    {"id": "lang_js_ts", "label": "JavaScript / TypeScript", "summary": "Web开发领域地位稳固,TypeScript的类型系统正在成为中大型项目的默认选择", "detail": "JavaScript作为浏览器端事实上的唯一选择,地位难以被取代;而TypeScript因为提供了静态类型检查,在团队协作的中大型项目里正在从「可选项」变成「默认项」,纯JavaScript更多用在小型脚本或原型阶段。", "children": []},
-                    {"id": "lang_rust", "label": "Rust", "summary": "内存安全特性让它在系统编程、区块链底层、部分基础设施项目里的采用率持续上升", "detail": "Rust的所有权系统能在编译期就排除掉大量内存安全问题,这对系统级软件(操作系统组件、区块链底层、高性能中间件)的可靠性要求来说极具吸引力,代价是学习曲线陡峭,不适合作为入门语言。", "children": []},
-                    {"id": "lang_go", "label": "Go", "summary": "云原生、微服务领域保持稳定份额,简洁的语法和优秀的并发模型是核心优势", "detail": "Go语言的并发模型(goroutine)对编写高并发的网络服务特别友好,加上编译产物是单一可执行文件、部署简单,这让它在云原生、微服务、DevOps工具链领域持续保持稳定的市场份额。", "children": []},
+                    {"id": "lang_python", "label": "Python", "summary": "AI/数据科学生态的绝对主力,生态壁垒短期内难以撼动", "detail": "Python凭借在AI/机器学习、数据科学领域近乎垄断的生态位置(几乎所有主流框架的一手接口都是Python),持续保持增长,即便执行效率不是它的强项,生态和易用性的优势也足以抵消这个短板。", "resources": [{"type": "website", "title": "Python 官网", "url": "https://www.python.org/"}], "children": []},
+                    {"id": "lang_js_ts", "label": "JavaScript / TypeScript", "summary": "Web开发领域地位稳固,TypeScript的类型系统正在成为中大型项目的默认选择", "detail": "JavaScript作为浏览器端事实上的唯一选择,地位难以被取代;而TypeScript因为提供了静态类型检查,在团队协作的中大型项目里正在从「可选项」变成「默认项」,纯JavaScript更多用在小型脚本或原型阶段。", "resources": [{"type": "website", "title": "TypeScript 官网", "url": "https://www.typescriptlang.org/"}], "children": []},
+                    {"id": "lang_rust", "label": "Rust", "summary": "内存安全特性让它在系统编程、区块链底层、部分基础设施项目里的采用率持续上升", "detail": "Rust的所有权系统能在编译期就排除掉大量内存安全问题,这对系统级软件(操作系统组件、区块链底层、高性能中间件)的可靠性要求来说极具吸引力,代价是学习曲线陡峭,不适合作为入门语言。", "resources": [{"type": "website", "title": "Rust 官网", "url": "https://www.rust-lang.org/"}], "children": []},
+                    {"id": "lang_go", "label": "Go", "summary": "云原生、微服务领域保持稳定份额,简洁的语法和优秀的并发模型是核心优势", "detail": "Go语言的并发模型(goroutine)对编写高并发的网络服务特别友好,加上编译产物是单一可执行文件、部署简单,这让它在云原生、微服务、DevOps工具链领域持续保持稳定的市场份额。", "resources": [{"type": "website", "title": "Go 官网", "url": "https://go.dev/"}], "children": []},
                 ],
             },
         ],
@@ -654,6 +683,10 @@ CONTENT_TREE = [
                 "label": "第一性原理",
                 "summary": "把问题拆解到不能再拆的基本事实,再从这些事实重新推导,而不是靠类比已有方案",
                 "detail": "第一性原理思维的核心动作是:遇到一个问题时,不问「别人是怎么做的」,而是问「这件事在物理/经济/逻辑层面最基本的约束是什么」,然后从这些基本约束出发重新推导解决方案。这种思维方式的代价是更耗时,但能避免被「行业惯例」这种未经审视的假设限制住。",
+                "resources": [
+                    {"type": "video", "title": "Elon Musk 亲自解释第一性原理(Kevin Rose访谈)", "url": "https://www.youtube.com/watch?v=NV3sBlRgzTI"},
+                    {"type": "website", "title": "Farnam Street:第一性原理详解", "url": "https://fs.blog/first-principles/"},
+                ],
                 "children": [],
             },
             {
@@ -661,6 +694,9 @@ CONTENT_TREE = [
                 "label": "马斯克五步工作法",
                 "summary": "质疑需求本身→尽量删除→尽量简化优化→加速流程→最后才自动化,顺序反了会浪费大量精力",
                 "detail": "这套流程的关键在于顺序:先质疑这个要求本身是否真的必要(哪怕是权威提出的),再看能不能直接删掉某个零件或步骤,然后才是简化和优化,接下来是加速迭代节奏,自动化被放在最后一步——很多团队的常见错误是跳过前面几步直接去自动化一个本不该存在的流程,结果是把一个不必要的环节做得更高效,而不是把它去掉。",
+                "resources": [
+                    {"type": "video", "title": "Elon Musk 五步算法讲解", "url": "https://www.youtube.com/watch?v=Njard7GDNXM"},
+                ],
                 "children": [],
             },
             {
@@ -668,6 +704,9 @@ CONTENT_TREE = [
                 "label": "巴菲特能力圈",
                 "summary": "诚实画出自己真正理解的领域边界,圈子大小不重要,知道边界在哪里才重要",
                 "detail": "能力圈概念的核心不是要求这个圈子有多大,而是要求对圈子的边界有清醒的认知——在圈子内做决策,在圈子外保持克制不出手。很多决策失误不是因为能力圈太小,而是高估了自己对圈外事物的理解程度。",
+                "resources": [
+                    {"type": "website", "title": "Farnam Street:能力圈详解", "url": "https://fs.blog/circle-of-competence/"},
+                ],
                 "children": [],
             },
             {
@@ -682,6 +721,10 @@ CONTENT_TREE = [
                 "label": "达利欧痛苦+反思",
                 "summary": "痛苦本身不产生成长,痛苦之后系统性的复盘反思才产生成长——这是桥水基金决策文化的核心公式",
                 "detail": "这个公式强调「痛苦」和「反思」必须组合出现:只经历痛苦而不做结构化复盘,只是单纯受苦;只反思不经历真实的挫败,反思容易流于表面。把重大失误当成案例做详细复盘(而不是回避或简单归因于运气),是这套方法论里最容易被低估、但执行起来最反人性的一步。",
+                "resources": [
+                    {"type": "video", "title": "《原则》动画版:Principles for Success(30分钟完整版)", "url": "https://www.youtube.com/watch?v=B9XGUpQZY38"},
+                    {"type": "website", "title": "Principles.com 官方动画系列", "url": "https://www.principles.com/principles-for-success"},
+                ],
                 "children": [],
             },
             {
@@ -689,6 +732,9 @@ CONTENT_TREE = [
                 "label": "纳瓦尔杠杆理论",
                 "summary": "人力、资本、复制成本为零的产品(代码/媒体内容)是三种主要杠杆,后两种不需要「获得许可」就能使用",
                 "detail": "纳瓦尔的框架把「杠杆」分成几类:雇人(需要别人的许可和配合)、资本(需要别人给你钱)、以及复制边际成本接近零的产品——写的代码、录的课程、做的媒体内容(不需要经过任何人许可就能大规模复制分发)。这套框架的核心提醒是:后两种杠杆随着技术发展变得越来越容易获取,判断力和特定知识本身正在变成最稀缺的资源,而不是执行力。",
+                "resources": [
+                    {"type": "website", "title": "How to Get Rich(纳瓦尔原始推文长文,官方站点)", "url": "https://nav.al/rich"},
+                ],
                 "children": [],
             },
             {
@@ -696,6 +742,9 @@ CONTENT_TREE = [
                 "label": "特定知识(Specific Knowledge)",
                 "summary": "学不来、也没法靠考证获得的知识——通常来自你真正着迷、别人觉得像玩一样的事情",
                 "detail": "「特定知识」跟可以通过培训获得的通用技能不同,它往往是在追求自己真正好奇、别人看来更像是「玩」而不是「工作」的事情过程中自然形成的,正因为难以复制和培训,才具备真正的差异化价值。找到它的方法通常不是规划出来的,而是长期投入某件事之后回头才看得清楚。",
+                "resources": [
+                    {"type": "website", "title": "How to Get Rich(特定知识章节出处)", "url": "https://nav.al/rich"},
+                ],
                 "children": [],
             },
             {
@@ -703,6 +752,9 @@ CONTENT_TREE = [
                 "label": "费曼学习法",
                 "summary": "能用简单的话讲给外行听懂,才算真正理解;卡壳的地方,就是你没真正搞懂的地方",
                 "detail": "这套方法的操作很简单:挑一个你以为自己懂的概念,试着用最简单的语言讲给完全不懂这个领域的人听,讲不下去或者必须用更专业的术语才能继续的地方,就精确地暴露了你理解上的缺口——然后回去补这个缺口,再重新尝试讲一遍。",
+                "resources": [
+                    {"type": "website", "title": "Farnam Street:费曼学习法完整步骤", "url": "https://fs.blog/feynman-learning-technique/"},
+                ],
                 "children": [],
             },
         ],
